@@ -4,12 +4,16 @@
   "description": "\"Belajar Express untuk membuat Portfolio App / Backend\"",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "author": "Najah <najah.hafshoh@gmail.com>",
   "license": "ISC",
   "type": "module",
   "dependencies": {
     "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
   }
 }
