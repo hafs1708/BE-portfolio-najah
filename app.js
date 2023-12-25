@@ -2,37 +2,84 @@ import express from "express";
 
 const app = express();
 
-app.get('/', function (req, res) {
-    // res.send('<p>Hello World</p>')
+app.use(express.json());
 
-    res.format({
-        // 'text/plain': function () {
-        //     res.send('<i>Hello World</i>')
-        // }
-        'application/json': function () {
-            res.send({ 
-                message: 'Hello Object JSON' 
+app.get('/', (req, res) => {
+    res.send('<p>Halaman Homepage</p>')
+})
+
+// CONTACT
+app.get('/contact', (req, res) => {
+    res.status(200).format({
+        json: () => {
+                res.send({
+                ip: req.ip,
+                query: req.query,
+                body: req.body,
+                nama_jalan: req.path
             })
         }
     })
-})
+});
 
-app.get('/contact', function (req, res) {
-    res.send('<p>Halaman Contact</p>')
-})
+app.post('/contact', (req, res) => {
+    res.send('<p>Halaman Untuk Menyimpan Contact </p>')
+});
 
-app.get('/about', function (req, res) {
-    res.send('<p>Halaman About</p>')
-})
+app.put('/contact/:id', (req, res) => {
+    // res.send('<p>Request Untuk Semua Data di Contact </p>')
+    res.status(200).format({
+        json: () => {
+                res.send({
+                ip: req.ip,
+                query: req.query,
+                body: req.body,
+                nama_jalan: req.path,
+                params: req.params
+            })
+        }
+    })
+});
 
-app.get('/project', function (req, res) {
+app.patch('/contact', (req, res) => {
+    res.send('<p>Request Untuk Sebagian Data di Contact </p>')
+});
+
+app.delete('/contact', (req, res) => {
+    res.send('<p>Request Untuk Hapus Data</p>')
+});
+
+// ABOUT
+app.get('/about', (req, res) => {
+    // res.send('<p>Halaman About</p>')
+    res.cookie("token", "afhaudshfsnbaudshure"),
+    res.cookie("username", "Najah")
+});
+
+app.post('/about', (req, res) => {
+    res.send('<p>Halaman Untuk Menyimpan About</p>')
+});
+
+app.put('/about', (req, res) => {
+    res.send('<p>Request Untuk Semua Data di About</p>')
+});
+
+app.patch('/about', (req, res) => {
+    res.send('<p>Request Untuk Sebagian Data di About</p>')
+});
+
+app.delete('/about', (req, res) => {
+    res.send('<p>Request Untuk Hapus Data</p>')
+});
+
+app.get('/project', (req, res) => {
     res.send('<p>Halaman Project</p>')
-})
+});
 
-app.get('/blog', function (req, res) {
+app.get('/blog', (req, res) => {
     res.send('<p>Halaman Blog</p>')
-})
+});
 
-app.listen(5000, function () {
-    console.info("App is running in http://localhost:5000")
-})
+app.listen(5000, () => {
+    c =>onsole.info("App is running in http://localhost:5000")
+});
