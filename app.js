@@ -10,15 +10,32 @@ app.use(express.json());
 // untuk membaca cookies
 app.use(cookieParser());
 
+// Belajar MIDDLEWARE => LOGIN
+app.use((req, res, next) => {
+    const time = new Date().toLocaleDateString();
+    const log = {
+        time: time,
+        path: req.path,
+        method: req.method,
+        query: req.query,
+        cookies: req.cookies,
+        protocol: req.protocol,
+        body: req.body
+    }
+    console.info(log)
+    next()
+});
+
+// ------- HOME ---------
 app.get('/', (req, res) => {
     res.send('<p>Halaman Homepage</p>')
 })
 
-// CONTACT
+// ------- CONTACT --------
 app.get('/contact', (req, res) => {
     res.status(200).format({
         json: () => {
-                res.send({
+            res.send({
                 ip: req.ip,
                 query: req.query,
                 body: req.body,
@@ -36,7 +53,7 @@ app.put('/contact/:id', (req, res) => {
     // res.send('<p>Request Untuk Semua Data di Contact </p>')
     res.status(200).format({
         json: () => {
-                res.send({
+            res.send({
                 ip: req.ip,
                 query: req.query,
                 body: req.body,
@@ -55,28 +72,77 @@ app.delete('/contact', (req, res) => {
     res.send('<p>Request Untuk Hapus Data</p>')
 });
 
-// ABOUT
-app.get('/about', (req, res) => {
-    // res.send('<p>Halaman About</p>')
-
+//------- PROFILE --------
+app.get('/profile', (req, res) => {
+    res.status(200).json({
+        message: "Berhasil"
+    });
 });
 
-app.post('/about', (req, res) => {
-    res.send('<p>Halaman Untuk Menyimpan About</p>')
+// PATH: METHOD POST UNTUK MENYIMPAN DATA profile
+app.post('/profile', (req, res) => {
+    res.status(200).json({
+        message: "Data berhasil disimpan"
+    });
 });
 
-app.put('/about', (req, res) => {
-    res.send('<p>Request Untuk Semua Data di About</p>')
+// PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA profile
+app.put('/profile/:id', (req, res) => {
+    res.status(200).json({
+        message: "Data berhasil disimpan seluruhnya"
+    });
 });
 
-app.patch('/about', (req, res) => {
-    res.send('<p>Request Untuk Sebagian Data di About</p>')
+// PATH: METHOD PATCH UNTUK MENYIMPAN SEBAGIAN DATA profile
+app.patch('/profile/:id', (req, res) => {
+    res.status(200).json({
+        message: "Data sebagian berhasil disimpan"
+    });
 });
 
-app.delete('/about', (req, res) => {
-    res.send('<p>Request Untuk Hapus Data</p>')
+// PATH: METHOD DELETE UNTUK MENGHAPUS DATA profile SESUAI ID
+app.delete('/profile/:id', (req, res) => {
+    res.status(200).json({
+        message: "Data berhasil dihapus"
+    });
 });
 
+//------- EDUCATION --------
+app.get('/education', (req, res) => {
+    res.status(200).json({
+        message: "Berhasil"
+    });
+});
+
+// PATH: METHOD POST UNTUK MENYIMPAN DATA education
+app.post('/education', (req, res) => {
+    res.status(200).json({
+        message: "Data berhasil disimpan"
+    });
+});
+
+// PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA education
+app.put('/education/:id', (req, res) => {
+    res.status(200).json({
+        message: "Data berhasil disimpan seluruhnya"
+    });
+});
+
+// PATH: METHOD PATCH UNTUK MENYIMPAN SEBAGIAN DATA education
+app.patch('/education/:id', (req, res) => {
+    res.status(200).json({
+        message: "Data sebagian berhasil disimpan"
+    });
+});
+
+// PATH: METHOD DELETE UNTUK MENGHAPUS DATA education SESUAI ID
+app.delete('/education/:id', (req, res) => {
+    res.status(200).json({
+        message: "Data berhasil dihapus"
+    });
+});
+
+//-------- PROJECT --------
 app.get('/project', (req, res) => {
     // res.send('<p>Halaman Project</p>')
 
@@ -86,10 +152,105 @@ app.get('/project', (req, res) => {
     })
 });
 
-app.get('/blog', (req, res) => {
-    res.send('<p>Halaman Blog</p>')
+// PATH: METHOD POST UNTUK MENYIMPAN DATA project
+app.post('/project', (req, res) => {
+    res.status(200).json({
+        message: "Data berhasil disimpan"
+    });
 });
 
+// PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA project
+app.put('/project/:id', (req, res) => {
+    res.status(200).json({
+        message: "Data berhasil disimpan seluruhnya"
+    });
+});
+
+// PATH: METHOD PATCH UNTUK MENYIMPAN SEBAGIAN DATA project
+app.patch('/project/:id', (req, res) => {
+    res.status(200).json({
+        message: "Data sebagian berhasil disimpan"
+    });
+});
+
+// PATH: METHOD DELETE UNTUK MENGHAPUS DATA project SESUAI ID
+app.delete('/project/:id', (req, res) => {
+    res.status(200).json({
+        message: "Data berhasil dihapus"
+    });
+});
+
+// -------- BLOG -------
+app.get('/blog', (req, res) => {
+    res.status(200).json({
+        message: "Berhasil"
+    });
+});
+
+// PATH: METHOD POST UNTUK MENYIMPAN DATA blog
+app.post('/blog', (req, res) => {
+    res.status(200).json({
+        message: "Data berhasil disimpan"
+    });
+});
+
+// PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA blog
+app.put('/blog/:id', (req, res) => {
+    res.status(200).json({
+        message: "Data berhasil disimpan seluruhnya"
+    });
+});
+
+// PATH: METHOD PATCH UNTUK MENYIMPAN SEBAGIAN DATA blog
+app.patch('/blog/:id', (req, res) => {
+    res.status(200).json({
+        message: "Data sebagian berhasil disimpan"
+    });
+});
+
+// PATH: METHOD DELETE UNTUK MENGHAPUS DATA blog SESUAI ID
+app.delete('/blog/:id', (req, res) => {
+    res.status(200).json({
+        message: "Data berhasil dihapus"
+    });
+});
+
+//------- SKILL --------
+app.get('/skill', (req, res) => {
+    res.status(200).json({
+        message: "Berhasil"
+    });
+});
+
+// PATH: METHOD POST UNTUK MENYIMPAN DATA skill
+app.post('/skill', (req, res) => {
+    res.status(200).json({
+        message: "Data berhasil disimpan"
+    });
+});
+
+// PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA skill
+app.put('/skill/:id', (req, res) => {
+    res.status(200).json({
+        message: "Data berhasil disimpan seluruhnya"
+    });
+});
+
+// PATH: METHOD PATCH UNTUK MENYIMPAN SEBAGIAN DATA skill
+app.patch('/skill/:id', (req, res) => {
+    res.status(200).json({
+        message: "Data sebagian berhasil disimpan"
+    });
+});
+
+// PATH: METHOD DELETE UNTUK MENGHAPUS DATA skill SESUAI ID
+app.delete('/skill/:id', (req, res) => {
+    res.status(200).json({
+        message: "Data berhasil dihapus"
+    });
+});
+
+// PATH: METHOD POST UNTUK LOGIN
 app.post('/login', (req, res) => {
     res.cookie("token", "afhaudshfsnbaudshure");
     res.cookie("username", "Najah");
@@ -100,6 +261,7 @@ app.post('/login', (req, res) => {
     })
 });
 
+// PATH: METHOD DELETE UNTUK LOGOUT
 app.delete('/logout', (req, res) => {
     res.clearCookie('lokasi');
     res.clearCookie('username');
@@ -108,6 +270,13 @@ app.delete('/logout', (req, res) => {
     res.status(200).json({
         message: "Semua data di cookie berhasil di hapus"
     })
+});
+
+// MIDDLEWARE UNTUK PATH ASING / UNKNOWN PAGE
+app.use((req, res) => {
+    res.status(404).json({
+        message: "Halaman tidak ditemukan"
+    });
 });
 
 app.listen(5000, () => {
