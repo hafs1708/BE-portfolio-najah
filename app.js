@@ -1,8 +1,14 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 
+// deklarasi aplikasi express
 const app = express();
 
+// untuk membaca json dari body
 app.use(express.json());
+
+// untuk membaca cookies
+app.use(cookieParser());
 
 app.get('/', (req, res) => {
     res.send('<p>Halaman Homepage</p>')
@@ -52,8 +58,7 @@ app.delete('/contact', (req, res) => {
 // ABOUT
 app.get('/about', (req, res) => {
     // res.send('<p>Halaman About</p>')
-    res.cookie("token", "afhaudshfsnbaudshure"),
-    res.cookie("username", "Najah")
+
 });
 
 app.post('/about', (req, res) => {
@@ -73,13 +78,38 @@ app.delete('/about', (req, res) => {
 });
 
 app.get('/project', (req, res) => {
-    res.send('<p>Halaman Project</p>')
+    // res.send('<p>Halaman Project</p>')
+
+    res.status(200).json({
+        cookies: req.cookies,
+        test: "data test"
+    })
 });
 
 app.get('/blog', (req, res) => {
     res.send('<p>Halaman Blog</p>')
 });
 
+app.post('/login', (req, res) => {
+    res.cookie("token", "afhaudshfsnbaudshure");
+    res.cookie("username", "Najah");
+    res.cookie("lokasi", "Jakarta");
+
+    res.status(200).json({
+        message: "Anda berhasil login"
+    })
+});
+
+app.delete('/logout', (req, res) => {
+    res.clearCookie('lokasi');
+    res.clearCookie('username');
+    res.clearCookie('token');
+
+    res.status(200).json({
+        message: "Semua data di cookie berhasil di hapus"
+    })
+});
+
 app.listen(5000, () => {
-    c =>onsole.info("App is running in http://localhost:5000")
+    console.info("App is running in http://localhost:5000")
 });
