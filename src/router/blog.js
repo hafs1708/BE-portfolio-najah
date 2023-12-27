@@ -1,37 +1,11 @@
 import express from 'express';
+import blogController from '../controller/blogController.js';
+
 
 export const routerBlog = express.Router();
 
-routerBlog.get('/blog', (req, res) => {
-    res.status(200).json({
-        message: "Berhasil"
-    });
-});
-
-// PATH: METHOD POST UNTUK MENYIMPAN DATA blog
-routerBlog.post('/blog', (req, res) => {
-    res.status(200).json({
-        message: "Data berhasil disimpan"
-    });
-});
-
-// PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA blog
-routerBlog.put('/blog/:id', (req, res) => {
-    res.status(200).json({
-        message: "Data berhasil disimpan seluruhnya"
-    });
-});
-
-// PATH: METHOD PATCH UNTUK MENYIMPAN SEBAGIAN DATA blog
-routerBlog.patch('/blog/:id', (req, res) => {
-    res.status(200).json({
-        message: "Data sebagian berhasil disimpan"
-    });
-});
-
-// PATH: METHOD DELETE UNTUK MENGHAPUS DATA blog SESUAI ID
-routerBlog.delete('/blog/:id', (req, res) => {
-    res.status(200).json({
-        message: "Data berhasil dihapus"
-    });
-});
+routerBlog.get('/blog', blogController.get);
+routerBlog.post('/blog', blogController.post);
+routerBlog.put('/blog/:id', blogController.put);
+routerBlog.patch('/blog/:id', blogController.patch);
+routerBlog.delete('/blog/:id', blogController.remove);
