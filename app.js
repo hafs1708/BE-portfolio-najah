@@ -1,5 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
+
 import { routerProfile } from "./src/router/profile.js";
 import { routerEducation } from "./src/router/education.js";
 import { routerProject } from "./src/router/project.js";
