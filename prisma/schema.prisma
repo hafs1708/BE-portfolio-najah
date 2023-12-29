@@ -14,6 +14,7 @@ model User {
   name      String   @db.VarChar(100)
   email     String   @id @db.VarChar(100)
   password  String   @db.VarChar(200)
+  token     String?  @db.VarChar(255)
   craetedAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
