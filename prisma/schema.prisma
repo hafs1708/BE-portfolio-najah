@@ -87,3 +87,24 @@ model Education {
 
   @@map("education")
 }
+
+model SkillCategory {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(100)
+  craetedAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  Skill     Skill[]
+
+  @@map("skill_category")
+}
+
+model Skill {
+  id              Int           @id @default(autoincrement())
+  title           String        @db.VarChar(100)
+  skillCategoryId Int           @db.Int
+  category        SkillCategory @relation(fields: [skillCategoryId], references: [id])
+  craetedAt       DateTime      @default(now())
+  updatedAt       DateTime      @default(now()) @updatedAt
+
+  @@map("skill")
+}
