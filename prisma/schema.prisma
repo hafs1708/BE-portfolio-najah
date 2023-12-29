@@ -74,3 +74,16 @@ enum ProjectStatus {
   MAINTENANCE
   COMPLETE
 }
+
+model Education {
+  id              Int      @id @default(autoincrement())
+  institutionName String   @db.VarChar(100)
+  startYear       Int      @db.Int
+  endYear         Int      @db.Int
+  major           String?  @db.VarChar(100)
+  degree          String?  @db.VarChar(100)
+  craetedAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+
+  @@map("education")
+}
