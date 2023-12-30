@@ -21,6 +21,14 @@ const get = async (req, res) => {
         }
     });
 
+    // HANDLE NOT FOUND
+    if (blog == null) {
+        res.status(404).json({
+            message: `blog ${id} tidak ketemu`
+        });
+
+    }
+
     res.status(200).json({
         message: "Berhasil mendapatkan data blog berdasarkan id = " + id,
         blog: blog
