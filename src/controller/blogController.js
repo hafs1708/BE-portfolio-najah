@@ -2,37 +2,49 @@ import { Prisma } from '../application/prisma.js';
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA BLOG
 const getAll = async (req, res) => {
-    const blogs = await Prisma.blog.findMany();
+    try {
+        // FIND MANY -> ambil semua blog
+        const blogs = await Prisma.blog.findMany();
 
-    res.status(200).json({
-        message: "Berhasil mendapatkan semua data blog",
-        blogs: blogs
-    });
+        res.status(200).json({
+            message: "Berhasil mendapatkan semua data blog",
+            blogs: blogs
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Server error " + error.message
+        })
+    }
 };
 
 //  GET BY ID
 const get = async (req, res) => {
-    let id = req.params.id;
-    id = parseInt(id); // untuk parse ke integer
+    try {
+        let id = req.params.id;
+        id = parseInt(id); // untuk parse ke integer
 
-    const blog = await Prisma.blog.findUnique({
-        where: {
-            id: id
-        }
-    });
-
-    // HANDLE NOT FOUND
-    if (blog == null) {
-        res.status(404).json({
-            message: `blog ${id} tidak ketemu`
+        const blog = await Prisma.blog.findUnique({
+            where: {
+                id: id
+            }
         });
 
-    }
+        // HANDLE NOT FOUND
+        if (blog == null) {
+            return res.status(404).json({
+                message: `blog ${id} tidak ketemu`
+            });
+        }
 
-    res.status(200).json({
-        message: "Berhasil mendapatkan data blog berdasarkan id = " + id,
-        blog: blog
-    });
+        res.status(200).json({
+            message: "Berhasil mendapatkan data blog berdasarkan id = " + id,
+            blog: blog
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Server error " + error.message
+        })
+    }
 };
 
 // PATH: METHOD POST UNTUK MENYIMPAN DATA BLOG
