@@ -21,6 +21,19 @@ const getAll = async (req, res) => {
 const get = async (req, res) => {
     try {
         let id = req.params.id;
+
+        if (!Number(id)) {
+            return res.status(400).json({
+                message: "ID is invalid"
+            })
+        }
+
+        // if (isNaN(id)) {
+        //     return res.status(400).json({
+        //         message: "ID is invalid"
+        //     })
+        // }
+
         id = parseInt(id); // untuk parse ke integer
 
         const blog = await Prisma.blog.findUnique({
