@@ -4,9 +4,11 @@ import blogController from '../controller/blogController.js';
 
 export const routerBlog = express.Router();
 
-routerBlog.route('/blog')
-    .get(blogController.get)
-    .post(blogController.post);
+routerBlog.get('/blogs', blogController.getAll);
+routerBlog.get('/blog/:id', blogController.get);
+routerBlog.post('/blog', blogController.post);
+// .get(blogController.get)
+// .post(blogController.post);
 
 routerBlog.route('/blog/:id')
     .put(blogController.put)
