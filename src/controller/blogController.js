@@ -172,10 +172,49 @@ const patch = (req, res) => {
 };
 
 // PATH: METHOD DELETE UNTUK MENGHAPUS DATA blog SESUAI ID
-const remove = (req, res) => {
-    res.status(200).json({
-        message: "Data berhasil dihapus"
-    });
+const remove = async (req, res) => {
+    try {
+        let id = req.params.id;
+
+        if (isNaN(id)) {
+            return res.status(400).json({
+                message: "ID is invalid"
+            })
+        }
+        id = parseInt(id);
+
+        const currentBlog = await Prisma.blog.findUnique({
+            where: {
+                id: id
+            },
+            select: {
+                id: true
+            }
+        });
+
+        if (!currentBlog) {
+            return res.status(404).json({
+                message: `Blog dengan id ${id} tidak ditemukan`
+            })
+        };
+
+        // EKSEKUSI DELETE
+        await Prisma.blog.delete({
+            where: {
+                id: id
+            }
+        })
+
+        res.status(200).json({
+            message: "Data berhasil dihapus"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Server error " + error.message
+        });
+    }
+
 };
 
 export default {
