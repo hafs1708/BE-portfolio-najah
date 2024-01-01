@@ -1,3 +1,4 @@
+import { join } from '@prisma/client/runtime/library.js';
 import { Prisma } from '../application/prisma.js';
 import Joi from 'joi';
 
@@ -23,7 +24,8 @@ const get = async (req, res) => {
     try {
         let id = req.params.id;
 
-        const schema = Joi.number().min(1).required();
+        // START JOI  VALIDATE
+        const schema = Joi.number().min(1).required().label("ID");
         const validation = schema.validate(id);
 
         if (validation.error) {
@@ -32,6 +34,7 @@ const get = async (req, res) => {
             });
         }
         id = validation.value;
+        // END JOI VALIDATE
 
         const blog = await Prisma.blog.findUnique({
             where: {
@@ -62,23 +65,22 @@ const post = async (req, res) => {
     try {
         const blog = req.body;
 
-        if (!blog.title || !blog.title) {
-            return res.status(400).json({
-                message: "Silahkan isi title & content"
-            })
-        }
+        // START JOI VALIDATE
+        const schemaBlog = Joi.object({
+            title: Joi.string().min(3).required().label("Title"),
+            content: Joi.string().min(3).required().label("Content")
+        });
 
-        if (blog.title.length < 3) {
+        const validateBlog = schemaBlog.validate(blog, {
+            abortEarly: false
+        });
+
+        if (validateBlog.error) {
             return res.status(400).json({
-                message: "Title minimal harus 3 karakter"
+                message: validateBlog.error.message
             });
         }
-
-        if (blog.content.length < 3) {
-            return res.status(400).json({
-                message: "Content minimal harus 3 karakter"
-            });
-        }
+        // END JOI VALIDATE
 
         const newBlog = await Prisma.blog.create({
             data: blog
