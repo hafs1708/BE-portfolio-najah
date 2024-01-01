@@ -25,7 +25,7 @@ const get = async (req, res) => {
         let id = req.params.id;
 
         // START JOI  VALIDATE
-        const schema = Joi.number().min(1).required().label("ID");
+        const schema = Joi.number().min(1).positive().required().label("ID");
         const validation = schema.validate(id);
 
         if (validation.error) {
@@ -67,8 +67,8 @@ const post = async (req, res) => {
 
         // START JOI VALIDATE
         const schemaBlog = Joi.object({
-            title: Joi.string().min(3).required().label("Title"),
-            content: Joi.string().min(3).required().label("Content")
+            title: Joi.string().trim().min(3).max(255).required().label("Title"),
+            content: Joi.string().trim().min(3).required().label("Content")
         });
 
         const validateBlog = schemaBlog.validate(blog, {
