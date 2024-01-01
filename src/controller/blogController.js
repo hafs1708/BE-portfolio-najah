@@ -1,4 +1,5 @@
 import { Prisma } from '../application/prisma.js';
+import Joi from 'joi';
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA BLOG
 const getAll = async (req, res) => {
@@ -22,19 +23,15 @@ const get = async (req, res) => {
     try {
         let id = req.params.id;
 
-        if (!Number(id)) {
+        const schema = Joi.number().min(1).required();
+        const validation = schema.validate(id);
+
+        if (validation.error) {
             return res.status(400).json({
-                message: "ID is invalid"
-            })
+                message: validation.error.message
+            });
         }
-
-        // if (isNaN(id)) {
-        //     return res.status(400).json({
-        //         message: "ID is invalid"
-        //     })
-        // }
-
-        id = parseInt(id); // untuk parse ke integer
+        id = validation.value;
 
         const blog = await Prisma.blog.findUnique({
             where: {
