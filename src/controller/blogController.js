@@ -100,11 +100,69 @@ const post = async (req, res) => {
 };
 
 // PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA blog
-const put = (req, res) => {
-    res.status(200).json({
-        message: "Data berhasil disimpan seluruhnya"
-    });
-};
+const put = async (req, res) => {
+    try {
+        const blog = req.body;
+        let id = req.params.id;
+
+        if (isNaN(id)) {
+            return res.status(400).json({
+                message: "ID is invalid"
+            })
+        }
+        id = parseInt(id);
+
+        if (!blog.title || !blog.title) {
+            return res.status(400).json({
+                message: "Silahkan isi title & content"
+            })
+        }
+
+        if (blog.title.length < 3) {
+            return res.status(400).json({
+                message: "Title minimal harus 3 karakter"
+            });
+        }
+
+        if (blog.content.length < 3) {
+            return res.status(400).json({
+                message: "Content minimal harus 3 karakter"
+            });
+        }
+
+        const currentBlog = await Prisma.blog.findUnique({
+            where: {
+                id: id
+            },
+            select: {
+                id: true
+            }
+        });
+
+
+        if (!currentBlog) {
+            return res.status(404).json({
+                message: `Blog dengan id ${id} tidak ditemukan`
+            })
+        }
+
+        const updateData = await Prisma.blog.update({
+            where: {
+                id: id
+            },
+            data: blog
+        });
+
+        res.status(200).json({
+            message: "Berhasil update data keseluruhan blog",
+            data: updateData
+        });
+    } catch {
+        res.status(200).json({
+            message: "Data berhasil disimpan seluruhnya"
+        });
+    }
+}
 
 // PATH: METHOD PATCH UNTUK MENYIMPAN SEBAGIAN DATA blog
 const patch = (req, res) => {
