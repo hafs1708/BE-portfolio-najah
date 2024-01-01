@@ -231,7 +231,9 @@ const updateTitle = async (req, res) => {
             where: {
                 id: id
             },
-            data: blog
+            data: {
+                title: title
+            }
         });
 
         res.status(200).json({
