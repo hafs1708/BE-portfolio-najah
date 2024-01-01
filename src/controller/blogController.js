@@ -139,7 +139,6 @@ const put = async (req, res) => {
             }
         });
 
-
         if (!currentBlog) {
             return res.status(404).json({
                 message: `Blog dengan id ${id} tidak ditemukan`
@@ -158,17 +157,70 @@ const put = async (req, res) => {
             data: updateData
         });
     } catch {
-        res.status(200).json({
-            message: "Data berhasil disimpan seluruhnya"
+        res.status(500).json({
+            message: "Server error " + error.message
         });
     }
 }
 
 // PATH: METHOD PATCH UNTUK MENYIMPAN SEBAGIAN DATA blog
-const patch = (req, res) => {
-    res.status(200).json({
-        message: "Data sebagian berhasil disimpan"
-    });
+const updateTitle = async (req, res) => {
+    try {
+        const blog = req.body;
+        let id = req.params.id;
+
+        if (isNaN(id)) {
+            return res.status(400).json({
+                message: "ID is invalid"
+            })
+        }
+        id = parseInt(id);
+
+        if (!blog.title) {
+            return res.status(400).json({
+                message: "Silahkan isi title"
+            })
+        }
+
+        if (blog.title.length < 3) {
+            return res.status(400).json({
+                message: "Title minimal harus 3 karakter"
+            });
+        }
+
+        const currentBlog = await Prisma.blog.findUnique({
+            where: {
+                id: id
+            },
+            select: {
+                id: true
+            }
+        });
+
+        if (!currentBlog) {
+            return res.status(404).json({
+                message: `Blog dengan id ${id} tidak ditemukan`
+            })
+        };
+
+        // EKSEKUSI PATCH
+        const updateTitle = await Prisma.blog.update({
+            where: {
+                id: id
+            },
+            data: blog
+        });
+
+        res.status(200).json({
+            message: "Data sebagian berhasil diubah",
+            data: updateTitle
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Server error " + error.message
+        });
+    }
+
 };
 
 // PATH: METHOD DELETE UNTUK MENGHAPUS DATA blog SESUAI ID
@@ -222,6 +274,6 @@ export default {
     get,
     post,
     put,
-    patch,
+    updateTitle,
     remove
 }
