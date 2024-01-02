@@ -13,6 +13,8 @@ import { routerSkill } from "./src/router/skill.js";
 import { routerAuth } from "./src/router/auth.js";
 import { logging } from "./src/middleware/logging.js";
 import { notFound } from "./src/middleware/notfound.js";
+import Joi from 'joi';
+import { JoiError } from './src/application/validate.js';
 
 // deklarasi aplikasi express
 const app = express();
@@ -46,6 +48,24 @@ app.use(routerAuth);
 
 // MIDDLEWARE UNTUK PATH ASING / UNKNOWN PAGE
 app.use(notFound);
+
+// MIDDLEWARE ERROR
+app.use((err, req, res, next) => {
+    if (!err) {
+        return next();
+    }
+
+    if (err instanceof JoiError) {
+        res.status(err.status).json({
+            message: err.message
+        }).end();
+    } else {
+        res.status(500).json({
+            message: "Server error : " + err.message
+        });
+    }
+
+});
 
 const port = process.env.PORT || 5000;
 console.log(port);

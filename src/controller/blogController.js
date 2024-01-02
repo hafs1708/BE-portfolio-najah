@@ -1,9 +1,10 @@
 import { join } from '@prisma/client/runtime/library.js';
 import { Prisma } from '../application/prisma.js';
+import { Validate } from '../application/validate.js';
 import Joi from 'joi';
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA BLOG
-const getAll = async (req, res) => {
+const getAll = async (req, res, next) => {
     try {
         // FIND MANY -> ambil semua blog
         const blogs = await Prisma.blog.findMany();
@@ -13,27 +14,19 @@ const getAll = async (req, res) => {
             blogs: blogs
         });
     } catch (error) {
-        res.status(500).json({
-            message: "Server error " + error.message
-        })
+        next(error);
     }
 };
 
 //  GET BY ID
-const get = async (req, res) => {
+const get = async (req, res, next) => {
     try {
         let id = req.params.id;
 
         // START JOI  VALIDATE
         const schema = Joi.number().min(1).positive().required().label("ID");
-        const validation = schema.validate(id);
+        id = Validate(schema, id);
 
-        if (validation.error) {
-            return res.status(400).json({
-                message: validation.error.message
-            });
-        }
-        id = validation.value;
         // END JOI VALIDATE
 
         const blog = await Prisma.blog.findUnique({
@@ -54,14 +47,12 @@ const get = async (req, res) => {
             blog: blog
         });
     } catch (error) {
-        res.status(500).json({
-            message: "Server error " + error.message
-        })
+        next(error);
     }
 };
 
 // PATH: METHOD POST UNTUK MENYIMPAN DATA BLOG
-const post = async (req, res) => {
+const post = async (req, res, next) => {
     try {
         let blog = req.body;
         let id = req.params.id;
@@ -105,15 +96,13 @@ const post = async (req, res) => {
             data: newBlog
         });
     } catch (error) {
-        res.status(500).json({
-            message: "Server error " + error.message
-        })
+        next(error);
     }
 
 };
 
 // PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA blog
-const put = async (req, res) => {
+const put = async (req, res, next) => {
     try {
         let blog = req.body;
         let id = req.params.id;
@@ -175,14 +164,12 @@ const put = async (req, res) => {
             data: updateData
         });
     } catch (error) {
-        res.status(500).json({
-            message: "Server error " + error.message
-        });
+        next(error);
     }
-}
+};
 
 // PATH: METHOD PATCH UNTUK MENYIMPAN SEBAGIAN DATA blog
-const updateTitle = async (req, res) => {
+const updateTitle = async (req, res, next) => {
     try {
         let title = req.body.title;
         let id = req.params.id;
@@ -241,15 +228,12 @@ const updateTitle = async (req, res) => {
             data: updateTitle
         });
     } catch (error) {
-        res.status(500).json({
-            message: "Server error " + error.message
-        });
+        next(error);
     }
-
 };
 
 // PATH: METHOD DELETE UNTUK MENGHAPUS DATA blog SESUAI ID
-const remove = async (req, res) => {
+const remove = async (req, res, next) => {
     try {
         let blog = req.body;
         let id = req.params.id;
@@ -309,11 +293,8 @@ const remove = async (req, res) => {
         res.status(200).json({
             message: "Data berhasil dihapus"
         });
-
     } catch (error) {
-        res.status(500).json({
-            message: "Server error " + error.message
-        });
+        next(error);
     }
 
 };
