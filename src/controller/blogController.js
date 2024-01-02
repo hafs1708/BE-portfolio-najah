@@ -1,8 +1,7 @@
-import { join } from '@prisma/client/runtime/library.js';
 import { Prisma } from '../application/prisma.js';
 import { Validate } from '../application/validate.js';
-import Joi from 'joi';
 import { isID } from '../validation/mainValidation.js';
+import { isBlog, isBlogTitle } from '../validation/blogValidation.js';
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA BLOG
 const getAll = async (req, res, next) => {
@@ -23,6 +22,8 @@ const getAll = async (req, res, next) => {
 const get = async (req, res, next) => {
     try {
         let id = req.params.id;
+
+        // VALIDATE ID
         id = Validate(isID, id);
 
         const blog = await Prisma.blog.findUnique({
@@ -53,12 +54,7 @@ const post = async (req, res, next) => {
         let blog = req.body;
 
         // START JOI VALIDATE
-        const schemaBlog = Joi.object({
-            title: Joi.string().trim().min(3).max(255).required().label("Title"),
-            content: Joi.string().trim().min(3).required().label("Content")
-        });
-        blog = Validate(schemaBlog, blog);
-        // END JOI VALIDATE
+        blog = Validate(isBlog, blog);
 
         const newBlog = await Prisma.blog.create({
             data: blog
@@ -79,15 +75,12 @@ const put = async (req, res, next) => {
     try {
         let blog = req.body;
         let id = req.params.id;
+
+        // VALIDATE ID
         id = Validate(isID, id);
 
         // START JOI VALIDATE
-        const schemaBlog = Joi.object({
-            title: Joi.string().trim().min(3).max(255).required().label("Title"),
-            content: Joi.string().trim().min(3).required().label("Content")
-        });
-        blog = Validate(schemaBlog, blog);
-        // END JOI VALIDATE
+        blog = Validate(isBlog, blog);
 
         const currentBlog = await Prisma.blog.findUnique({
             where: {
@@ -125,12 +118,12 @@ const updateTitle = async (req, res, next) => {
     try {
         let title = req.body.title;
         let id = req.params.id;
+
+        // VALIDATE ID
         id = Validate(isID, id);
 
         // START JOI VALIDATE
-        const schemaTitle = Joi.string().trim().min(3).max(255).required().label("Title");
-        title = Validate(schemaTitle, title);
-        // END JOI VALIDATE
+        title = Validate(isBlogTitle, title);
 
         const currentBlog = await Prisma.blog.findUnique({
             where: {
@@ -170,6 +163,8 @@ const updateTitle = async (req, res, next) => {
 const remove = async (req, res, next) => {
     try {
         let id = req.params.id;
+
+        // VALIDATE ID
         id = Validate(isID, id);
 
         const currentBlog = await Prisma.blog.findUnique({
