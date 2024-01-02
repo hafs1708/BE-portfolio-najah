@@ -3,6 +3,21 @@ import { Validate } from "../application/validate.js";
 import { isEducation } from "../validation/educationValidation.js";
 import { isID } from "../validation/mainValidation.js";
 
+//  PATH: METHOD GET UNTUK MENGAMBIL DATA BLOG
+const getAll = async (req, res, next) => {
+    try {
+        // FIND MANY -> ambil semua blog
+        const educations = await Prisma.education.findMany();
+
+        res.status(200).json({
+            message: "Berhasil mendapatkan semua data education",
+            educations: educations
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 //  GET BY ID
 const get = async (req, res, next) => {
     try {
@@ -145,6 +160,7 @@ const remove = async (req, res, next) => {
 };
 
 export default {
+    getAll,
     get,
     post,
     put,
