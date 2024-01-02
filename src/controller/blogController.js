@@ -2,6 +2,7 @@ import { join } from '@prisma/client/runtime/library.js';
 import { Prisma } from '../application/prisma.js';
 import { Validate } from '../application/validate.js';
 import Joi from 'joi';
+import { isID } from '../validation/mainValidation.js';
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA BLOG
 const getAll = async (req, res, next) => {
@@ -22,12 +23,7 @@ const getAll = async (req, res, next) => {
 const get = async (req, res, next) => {
     try {
         let id = req.params.id;
-
-        // START JOI  VALIDATE
-        const schema = Joi.number().min(1).positive().required().label("ID");
-        id = Validate(schema, id);
-
-        // END JOI VALIDATE
+        id = Validate(isID, id);
 
         const blog = await Prisma.blog.findUnique({
             where: {
@@ -55,36 +51,13 @@ const get = async (req, res, next) => {
 const post = async (req, res, next) => {
     try {
         let blog = req.body;
-        let id = req.params.id;
-
-        // START JOI VALIDATE ID
-        const schema = Joi.number().min(1).positive().required().label("ID");
-        const validation = schema.validate(id);
-
-        if (validation.error) {
-            return res.status(400).json({
-                message: validation.error.message
-            });
-        }
-        id = validation.value;
-        // END JOI VALIDATE ID
 
         // START JOI VALIDATE
         const schemaBlog = Joi.object({
             title: Joi.string().trim().min(3).max(255).required().label("Title"),
             content: Joi.string().trim().min(3).required().label("Content")
         });
-
-        const validateBlog = schemaBlog.validate(blog, {
-            abortEarly: false
-        });
-
-        if (validateBlog.error) {
-            return res.status(400).json({
-                message: validateBlog.error.message
-            });
-        }
-        blog = validateBlog.value;
+        blog = Validate(schemaBlog, blog);
         // END JOI VALIDATE
 
         const newBlog = await Prisma.blog.create({
@@ -106,35 +79,14 @@ const put = async (req, res, next) => {
     try {
         let blog = req.body;
         let id = req.params.id;
-
-        // START JOI VALIDATE ID
-        const schema = Joi.number().min(1).positive().required().label("ID");
-        const validation = schema.validate(id);
-
-        if (validation.error) {
-            return res.status(400).json({
-                message: validation.error.message
-            });
-        }
-        id = validation.value;
-        // END JOI VALIDATE ID
+        id = Validate(isID, id);
 
         // START JOI VALIDATE
         const schemaBlog = Joi.object({
             title: Joi.string().trim().min(3).max(255).required().label("Title"),
             content: Joi.string().trim().min(3).required().label("Content")
         });
-
-        const validateBlog = schemaBlog.validate(blog, {
-            abortEarly: false
-        });
-
-        if (validateBlog.error) {
-            return res.status(400).json({
-                message: validateBlog.error.message
-            });
-        }
-        blog = validateBlog.value;
+        blog = Validate(schemaBlog, blog);
         // END JOI VALIDATE
 
         const currentBlog = await Prisma.blog.findUnique({
@@ -173,29 +125,11 @@ const updateTitle = async (req, res, next) => {
     try {
         let title = req.body.title;
         let id = req.params.id;
-
-        // START JOI VALIDATE ID
-        const schema = Joi.number().min(1).positive().required().label("ID");
-        const validation = schema.validate(id);
-
-        if (validation.error) {
-            return res.status(400).json({
-                message: validation.error.message
-            });
-        }
-        id = validation.value;
-        // END JOI VALIDATE ID
+        id = Validate(isID, id);
 
         // START JOI VALIDATE
         const schemaTitle = Joi.string().trim().min(3).max(255).required().label("Title");
-        const validateTitle = schemaTitle.validate(title);
-
-        if (validateTitle.error) {
-            return res.status(400).json({
-                message: validateTitle.error.message
-            });
-        }
-        title = validateTitle.value;
+        title = Validate(schemaTitle, title);
         // END JOI VALIDATE
 
         const currentBlog = await Prisma.blog.findUnique({
@@ -235,38 +169,8 @@ const updateTitle = async (req, res, next) => {
 // PATH: METHOD DELETE UNTUK MENGHAPUS DATA blog SESUAI ID
 const remove = async (req, res, next) => {
     try {
-        let blog = req.body;
         let id = req.params.id;
-
-        // START JOI VALIDATE ID
-        const schema = Joi.number().min(1).positive().required().label("ID");
-        const validation = schema.validate(id);
-
-        if (validation.error) {
-            return res.status(400).json({
-                message: validation.error.message
-            });
-        }
-        id = validation.value;
-        // END JOI VALIDATE ID
-
-        // START JOI VALIDATE
-        const schemaBlog = Joi.object({
-            title: Joi.string().trim().min(3).max(255).required().label("Title"),
-            content: Joi.string().trim().min(3).required().label("Content")
-        });
-
-        const validateBlog = schemaBlog.validate(blog, {
-            abortEarly: false
-        });
-
-        if (validateBlog.error) {
-            return res.status(400).json({
-                message: validateBlog.error.message
-            });
-        }
-        blog = validateBlog.value;
-        // END JOI VALIDATE
+        id = Validate(isID, id);
 
         const currentBlog = await Prisma.blog.findUnique({
             where: {
