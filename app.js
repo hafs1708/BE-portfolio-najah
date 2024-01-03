@@ -58,22 +58,22 @@ app.use((error, req, res, next) => {
 
     // RESPONSE ERROR
     if (error instanceof ResponseError) {
-        return res.status(404).json({
+        return res.status(error.status).json({
             message: error.message
         });
     }
 
     // JOI VALIDATE ERROR
     if (error instanceof Joi.ValidationError) {
-        return res.status(error.status).json({
+        return res.status(400).json({
             message: error.message
-        }).end();
+        });
     }
 
     // SERVER ERROR
     res.status(500).json({
         message: "Server error : " + error.message
-    }).end();
+    });
 });
 
 const port = process.env.PORT || 5000;

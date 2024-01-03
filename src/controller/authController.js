@@ -1,7 +1,9 @@
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
 import { ResponseError } from "../error/responseError.js";
+import { loginValidation } from "../validation/authValidation.js";
 import bycrpt from 'bcrypt';
+import jwt from "jsonwebtoken";
 
 // PATH: METHOD POST UNTUK LOGIN
 const login = async (req, res, next) => {
@@ -17,22 +19,44 @@ const login = async (req, res, next) => {
             }
         });
 
-        // check password betul atau salah
+        if (!user) throw new ResponseError(400, "Email or Password is invalid");
+
+        // CHECK PASSWORD HASH
         const clientPassword = loginData.password;
         const dbPassword = user.password;
         const checkPassword = await bycrpt.compare(clientPassword, dbPassword);
 
         if (!checkPassword) throw new ResponseError(400, "Email or Password is invalid");
 
-        if (!user) throw new ResponseError(400, "Email or Password is invalid");
+        // CREATE TOKEN
+        const jwtscreet = 'TOKENPORTFOLIONAJAH';
+        const maxAge = 60 * 60 // 1 jam
+        var token = jwt.sign({ email: user.email }, jwtscreet, {
+            expiresIn: maxAge
+        });
 
-        res.cookie("token", "afhaudshfsnbaudshure");
-        res.cookie("username", "Najah");
-        res.cookie("lokasi", "Jakarta");
+        // CARA UNTUK KIRIM COOKIE KE CLIENT/BROWSER
+        res.cookie("token", token);
+
+        // UPDATE DATA USER, Masukkan ke token
+        const data = await Prisma.user.update({
+            where: {
+                email: loginData.email
+            },
+            data: {
+                token: token
+            },
+            select: {
+                name: true,
+                email: true
+            }
+        });
 
         res.status(200).json({
-            message: "Anda berhasil login"
-        })
+            message: "Anda berhasil login",
+            data: data,
+            token: token
+        });
     } catch (error) {
         next(error)
     }
