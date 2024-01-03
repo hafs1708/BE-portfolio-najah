@@ -2,6 +2,7 @@ import { Prisma } from '../application/prisma.js';
 import { Validate } from '../application/validate.js';
 import { isID } from '../validation/mainValidation.js';
 import { isBlog, isBlogTitle } from '../validation/blogValidation.js';
+import { ResponseError } from '../error/responseError.js';
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA BLOG
 const getAll = async (req, res, next) => {
@@ -33,11 +34,7 @@ const get = async (req, res, next) => {
         });
 
         // HANDLE NOT FOUND
-        if (blog == null) {
-            return res.status(404).json({
-                message: `blog ${id} tidak ketemu`
-            });
-        }
+        if (blog == null) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
         res.status(200).json({
             message: "Berhasil mendapatkan data blog berdasarkan id = " + id,
@@ -91,11 +88,7 @@ const put = async (req, res, next) => {
             }
         });
 
-        if (!currentBlog) {
-            return res.status(404).json({
-                message: `Blog dengan id ${id} tidak ditemukan`
-            })
-        }
+        if (!currentBlog) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
         const updateData = await Prisma.blog.update({
             where: {
@@ -134,11 +127,7 @@ const updateTitle = async (req, res, next) => {
             }
         });
 
-        if (!currentBlog) {
-            return res.status(404).json({
-                message: `Blog dengan id ${id} tidak ditemukan`
-            })
-        };
+        if (!currentBlog) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
         // EKSEKUSI PATCH
         const updateTitle = await Prisma.blog.update({
@@ -176,11 +165,7 @@ const remove = async (req, res, next) => {
             }
         });
 
-        if (!currentBlog) {
-            return res.status(404).json({
-                message: `Blog dengan id ${id} tidak ditemukan`
-            })
-        };
+        if (!currentBlog) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
         // EKSEKUSI DELETE
         await Prisma.blog.delete({
