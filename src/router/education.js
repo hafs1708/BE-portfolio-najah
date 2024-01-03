@@ -3,7 +3,7 @@ import educationController from '../controller/educationController.js';
 
 export const routerEducation = express.Router();
 
-routerEducation.get('/education', educationController.getAll);
+routerEducation.get('/educations', educationController.getAll);
 routerEducation.post('/education', educationController.post);
 
 routerEducation.route('/education/:id')

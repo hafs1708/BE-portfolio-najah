@@ -1,5 +1,6 @@
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
+import { ResponseError } from "../error/responseError.js";
 import { isEducation } from "../validation/educationValidation.js";
 import { isID } from "../validation/mainValidation.js";
 
@@ -32,11 +33,7 @@ const get = async (req, res, next) => {
         });
 
         // HANDLE NOT FOUND
-        if (education == null) {
-            return res.status(404).json({
-                message: `Education ${id} tidak ketemu`
-            });
-        }
+        if (education == null) throw new ResponseError(404, `Education dengan ${id} tidak ditemukan`);
 
         res.status(200).json({
             message: "Berhasil"
@@ -87,11 +84,7 @@ const put = async (req, res, next) => {
             }
         });
 
-        if (!currentEducation) {
-            return res.status(404).json({
-                message: `Education dengan id ${id} tidak ditemukan`
-            })
-        };
+        if (!currentEducation) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
         const updateData = await Prisma.education.update({
             where: {
@@ -137,11 +130,7 @@ const remove = async (req, res, next) => {
             }
         });
 
-        if (!currentEducation) {
-            return res.status(404).json({
-                message: `Education dengan id ${id} tidak ditemukan`
-            })
-        };
+        if (!currentEducation) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
         // EKSEKUSI DELETE
         await Prisma.education.delete({
