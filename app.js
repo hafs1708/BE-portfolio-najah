@@ -14,7 +14,7 @@ import { routerAuth } from "./src/router/auth.js";
 import { logging } from "./src/middleware/logging.js";
 import { notFound } from "./src/middleware/notfound.js";
 import Joi from 'joi';
-import { JoiError } from './src/application/validate.js';
+// import { JoiError } from './src/application/validate.js';
 
 // deklarasi aplikasi express
 const app = express();
@@ -50,21 +50,22 @@ app.use(routerAuth);
 app.use(notFound);
 
 // MIDDLEWARE ERROR
-app.use((err, req, res, next) => {
-    if (!err) {
+app.use((error, req, res, next) => {
+    if (!error) {
         return next();
     }
 
-    if (err instanceof JoiError) {
-        res.status(err.status).json({
-            message: err.message
+    // JOI VALIDATE ERROR
+    if (error instanceof Joi.ValidationError) {
+        return res.status(400).json({
+            message: error.message
         }).end();
-    } else {
-        res.status(500).json({
-            message: "Server error : " + err.message
-        });
     }
 
+    // SERVER ERROR
+    res.status(500).json({
+        message: "Server error : " + error.message
+    }).end();
 });
 
 const port = process.env.PORT || 5000;
