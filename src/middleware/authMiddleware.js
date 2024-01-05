@@ -32,14 +32,23 @@ export const authMiddleware = async (req, res, next) => {
         res.cookie("token", newtoken);
 
         // UPDATE USER TOKEN IN DB
-        await Prisma.user.update({
+        const updatedUserData = await Prisma.user.update({
             where: {
                 email: user.email
             },
             data: {
                 token: newtoken
+            },
+            select: {
+                email: true,
+                name: true,
+                token: true
             }
         });
+
+        // TAMBAHKAN DATA USER KE REQ
+        // DIGUNAKAN KETIKA DIBUTUHKAN
+        req.user = updatedUserData;
 
         next();
     } catch (error) {
