@@ -1,4 +1,4 @@
-import { Prisma } from "../application/prisma";
+import { Prisma } from "../application/prisma.js";
 import jwt from "jsonwebtoken";
 
 export const authMiddleware = async (req, res, next) => {
@@ -19,12 +19,11 @@ export const authMiddleware = async (req, res, next) => {
         if (!user) throw new Error();
 
         // CHECK TOKEN EXPIRED
-        const jwtscreet = 'TOKENPORTFOLIONAJAH';
+        const jwtscreet = process.env.JWT_SCREET;
         jwt.verify(token, jwtscreet);
 
         // UPDATE TOKEN
-        // const maxAge = 60 * 60 // 1 jam
-        const maxAge = 10; // 10 detik
+        const maxAge = 60 * 60 // 1 jam
         var newtoken = jwt.sign({ email: user.email }, jwtscreet, {
             expiresIn: maxAge
         });
