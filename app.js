@@ -16,6 +16,7 @@ import { notFound } from "./src/middleware/notfound.js";
 import { ResponseError } from './src/error/responseError.js';
 import { errorMiddleware } from './src/middleware/errorMiddleware.js';
 import { routerPublic } from './src/router/publicRouter.js';
+import { Prisma } from './src/application/prisma.js';
 // import { JoiError } from './src/application/validate.js';
 
 // deklarasi aplikasi express
@@ -35,22 +36,24 @@ app.use(routerPublic);
 
 // ROUTER DIBAWAH AKAN DI CEK AUTH / APAKAH SUDAH LOGIN
 // MIDDLEWARE AUTHENTICATION
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
     try {
         console.log("PROSES CEK AUTHENTICATION");
-
-        // unauthorized
-        // const lolos = false
-
-        // if (!lolos) {
-        //     throw new Error();
-        // }
 
         // CHECK TOKEN FROM COOKIE
         const token = req.cookies.token
         if (!token) throw new Error();
 
-        // CHECK TOKEN BY TOKEN
+        // CHECK USER BY TOKEN
+        const user = await Prisma.user.findFirst({
+            where: {
+                token: token
+            }
+        });
+
+        if (!user) throw new Error();
+
+        // CHECK TOKEN EXPIRED
 
         next();
     } catch (error) {
