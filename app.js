@@ -30,8 +30,29 @@ app.use(cookieParser());
 // MIDDLEWARE LOGGING
 app.use(logging);
 
-// PUBLIC ROUTER
+// PUBLIC API / TANPA LOGIN
 app.use(routerPublic);
+
+// ROUTER DIBAWAH AKAN DI CEK AUTH / APAKAH SUDAH LOGIN
+// MIDDLEWARE AUTHENTICATION
+app.use((req, res, next) => {
+    try {
+        console.log("PROSES CEK AUTHENTICATION");
+
+        // unauthorized
+        const lolos = false
+
+        if (!lolos) {
+            throw new Error();
+        }
+
+        next();
+    } catch (error) {
+        return res.status(401).json({
+            message: "Anda belom login"
+        })
+    }
+});
 
 // ROUTER PROFILE 
 app.use(routerProfile);
