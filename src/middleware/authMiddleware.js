@@ -1,5 +1,6 @@
 import { Prisma } from "../application/prisma.js";
 import jwt from "jsonwebtoken";
+import authService from "../service/authService.js";
 
 export const authMiddleware = async (req, res, next) => {
     try {
@@ -23,28 +24,11 @@ export const authMiddleware = async (req, res, next) => {
         jwt.verify(token, jwtscreet);
 
         // UPDATE TOKEN
-        const maxAge = 60 * 60 // 1 jam
-        var newtoken = jwt.sign({ email: user.email }, jwtscreet, {
-            expiresIn: maxAge
-        });
-
-        // CARA UNTUK KIRIM COOKIE KE CLIENT/BROWSER
-        res.cookie("token", newtoken);
+        const email = user.email
+        const newToken = authService.createToken(email, res)
 
         // UPDATE USER TOKEN IN DB
-        const updatedUserData = await Prisma.user.update({
-            where: {
-                email: user.email
-            },
-            data: {
-                token: newtoken
-            },
-            select: {
-                email: true,
-                name: true,
-                token: true
-            }
-        });
+        const updatedUserData = await authService.updatedUserData(email, newToken);
 
         // TAMBAHKAN DATA USER KE REQ
         // DIGUNAKAN KETIKA DIBUTUHKAN

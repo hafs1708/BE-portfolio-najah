@@ -3,7 +3,7 @@ import { Validate } from "../application/validate.js";
 import { ResponseError } from "../error/responseError.js";
 import { loginValidation } from "../validation/authValidation.js";
 import bycrpt from 'bcrypt';
-import jwt from "jsonwebtoken";
+import authService from "../service/authService.js";
 
 // PATH: METHOD POST UNTUK LOGIN
 const login = async (req, res, next) => {
@@ -29,28 +29,11 @@ const login = async (req, res, next) => {
         if (!checkPassword) throw new ResponseError(400, "Email or Password is invalid");
 
         // CREATE TOKEN
-        const jwtscreet = process.env.JWT_SCREET;
-        const maxAge = 60 * 60 // 1 jam
-        var token = jwt.sign({ email: user.email }, jwtscreet, {
-            expiresIn: maxAge
-        });
-
-        // CARA UNTUK KIRIM COOKIE KE CLIENT/BROWSER
-        res.cookie("token", token);
+        const email = user.email
+        const token = authService.createToken(email, res)
 
         // UPDATE DATA USER, Masukkan ke token
-        const data = await Prisma.user.update({
-            where: {
-                email: loginData.email
-            },
-            data: {
-                token: token
-            },
-            select: {
-                name: true,
-                email: true
-            }
-        });
+        const data = await authService.updatedUserData(email, token);
 
         res.status(200).json({
             message: "Anda berhasil login",
