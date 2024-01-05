@@ -30,7 +30,8 @@ const login = async (req, res, next) => {
 
         // CREATE TOKEN
         const jwtscreet = 'TOKENPORTFOLIONAJAH';
-        const maxAge = 60 * 60 // 1 jam
+        // const maxAge = 60 * 60 // 1 jam
+        const maxAge = 10; // 10 detik
         var token = jwt.sign({ email: user.email }, jwtscreet, {
             expiresIn: maxAge
         });

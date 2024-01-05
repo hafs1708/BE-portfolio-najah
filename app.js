@@ -17,6 +17,7 @@ import { ResponseError } from './src/error/responseError.js';
 import { errorMiddleware } from './src/middleware/errorMiddleware.js';
 import { routerPublic } from './src/router/publicRouter.js';
 import { Prisma } from './src/application/prisma.js';
+import jwt from "jsonwebtoken";
 // import { JoiError } from './src/application/validate.js';
 
 // deklarasi aplikasi express
@@ -54,9 +55,34 @@ app.use(async (req, res, next) => {
         if (!user) throw new Error();
 
         // CHECK TOKEN EXPIRED
+        const jwtscreet = 'TOKENPORTFOLIONAJAH';
+        jwt.verify(token, jwtscreet);
+
+        // UPDATE TOKEN
+        // const maxAge = 60 * 60 // 1 jam
+        const maxAge = 10; // 10 detik
+        var newtoken = jwt.sign({ email: user.email }, jwtscreet, {
+            expiresIn: maxAge
+        });
+
+        // CARA UNTUK KIRIM COOKIE KE CLIENT/BROWSER
+        res.cookie("token", newtoken);
+
+        // UPDATE USER TOKEN IN DB
+        await Prisma.user.update({
+            where: {
+                email: user.email
+            },
+            data: {
+                token: newtoken
+            }
+        });
 
         next();
     } catch (error) {
+        // hapus cookie di client / browser / postman 
+        res.clearCookie('token');
+
         return res.status(401).json({
             message: "Anda belom login"
         })
