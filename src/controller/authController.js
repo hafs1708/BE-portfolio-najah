@@ -1,3 +1,7 @@
+// LOAD ENV
+import dotenv from 'dotenv'
+dotenv.config();
+
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
 import { ResponseError } from "../error/responseError.js";
@@ -47,14 +51,40 @@ const login = async (req, res, next) => {
 };
 
 // PATH: METHOD DELETE UNTUK LOGOUT
-const logout = (req, res) => {
-    res.clearCookie('lokasi');
-    res.clearCookie('username');
-    res.clearCookie('token');
+const logout = async (req, res, next) => {
+    try {
+        // UPDATE DATA USER -> Token is null
+        const user = req.user;
+        const email = user.email;
 
-    res.status(200).json({
-        message: "Semua data di cookie berhasil di hapus"
-    })
+        await Prisma.user.update({
+            where: {
+                email: email
+            },
+            data: {
+                token: null
+            },
+            select: {
+                email: true
+            }
+        });
+
+        // BUAT TOKEN UMUR 1 DETIK = 1s
+        authService.createToken(email, res, '1s');
+        console.log(user);
+
+        // RESER COOKIE
+        res.clearCookie('token');
+
+        // SEND DATA SUCCESS
+        res.status(200).json({
+            message: "Success"
+        });
+    } catch (error) {
+        next(error);
+    }
+
+
 };
 
 export default {
