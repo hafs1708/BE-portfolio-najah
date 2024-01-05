@@ -40,11 +40,17 @@ app.use((req, res, next) => {
         console.log("PROSES CEK AUTHENTICATION");
 
         // unauthorized
-        const lolos = false
+        // const lolos = false
 
-        if (!lolos) {
-            throw new Error();
-        }
+        // if (!lolos) {
+        //     throw new Error();
+        // }
+
+        // CHECK TOKEN FROM COOKIE
+        const token = req.cookies.token
+        if (!token) throw new Error();
+
+        // CHECK TOKEN BY TOKEN
 
         next();
     } catch (error) {
