@@ -13,8 +13,9 @@ import { routerSkill } from "./src/router/skill.js";
 import { routerAuth } from "./src/router/auth.js";
 import { logging } from "./src/middleware/logging.js";
 import { notFound } from "./src/middleware/notfound.js";
-import Joi from 'joi';
 import { ResponseError } from './src/error/responseError.js';
+import { errorMiddleware } from './src/middleware/errorMiddleware.js';
+import { routerPublic } from './src/router/publicRouter.js';
 // import { JoiError } from './src/application/validate.js';
 
 // deklarasi aplikasi express
@@ -28,6 +29,9 @@ app.use(cookieParser());
 
 // MIDDLEWARE LOGGING
 app.use(logging);
+
+// PUBLIC ROUTER
+app.use(routerPublic);
 
 // ROUTER PROFILE 
 app.use(routerProfile);
@@ -51,30 +55,7 @@ app.use(routerAuth);
 app.use(notFound);
 
 // MIDDLEWARE ERROR
-app.use((error, req, res, next) => {
-    if (!error) {
-        return next();
-    }
-
-    // RESPONSE ERROR
-    if (error instanceof ResponseError) {
-        return res.status(error.status).json({
-            message: error.message
-        });
-    }
-
-    // JOI VALIDATE ERROR
-    if (error instanceof Joi.ValidationError) {
-        return res.status(400).json({
-            message: error.message
-        });
-    }
-
-    // SERVER ERROR
-    res.status(500).json({
-        message: "Server error : " + error.message
-    });
-});
+app.use(errorMiddleware);
 
 const port = process.env.PORT || 5000;
 console.log(port);
