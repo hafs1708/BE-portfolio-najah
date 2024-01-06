@@ -2,6 +2,7 @@ import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
 import { ResponseError } from "../error/responseError.js";
 import { isID } from "../validation/mainValidation.js";
+import { isProject } from "../validation/projectValidation.js";
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA project
 const getAll = async (req, res, next) => {
@@ -45,10 +46,20 @@ const get = async (req, res, next) => {
 };
 
 // PATH: METHOD POST UNTUK MENYIMPAN DATA project
-const post = (req, res, next) => {
+const post = async (req, res, next) => {
     try {
+        let project = req.body;
+
+        // START JOI VALIDATE
+        project = Validate(isProject, project);
+
+        const newProject = await Prisma.project.create({
+            data: project
+        });
+
         res.status(200).json({
-            message: "Data berhasil disimpan"
+            message: "Berhasil Menyimpan Data Project",
+            data: newProject
         });
     } catch (error) {
         next(error);
