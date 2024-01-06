@@ -33,7 +33,6 @@ const updatedUserData = async (email, token) => {
         select: {
             email: true,
             name: true,
-            token: true
         }
     });
 
