@@ -6,7 +6,7 @@ const isProject = Joi.object({
     description: isText.required(),
     startDate: Joi.date().less('now').required(),
     endDate: Joi.date().less('now'),
-    status: Joi.string().valid(ON_PROGRESS, MAINTENANCE, COMPLETE),
+    status: Joi.string().valid('ON_PROGRESS', 'MAINTENANCE', 'COMPLETE'),
     url: isURI,
     github: isURI,
     gitlab: isURI,

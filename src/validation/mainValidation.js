@@ -5,7 +5,7 @@ const isString100 = Joi.string().trim().min(3).max(100);
 const isString255 = Joi.string().trim().min(3).max(255);
 const isYear = Joi.number().positive();
 const isText = Joi.string().trim();
-const isURI = Joi.string().trim().rule();
+const isURI = Joi.string().trim().uri();
 
 
 export {
