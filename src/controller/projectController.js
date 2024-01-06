@@ -67,10 +67,38 @@ const post = async (req, res, next) => {
 };
 
 // PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA project
-const put = (req, res, next) => {
+const put = async (req, res, next) => {
     try {
+        let project = req.body;
+        let id = req.params.id;
+
+        // VALIDATE ID
+        id = Validate(isID, id);
+
+        // START JOI VALIDATE
+        project = Validate(isProject, project);
+
+        const currentProject = await Prisma.project.findUnique({
+            where: {
+                id: id
+            },
+            select: {
+                id: true
+            }
+        });
+
+        if (!currentProject) throw new ResponseError(404, `Project dengan ${id} tidak ditemukan`);
+
+        const updateData = await Prisma.project.update({
+            where: {
+                id: id
+            },
+            data: project
+        });
+
         res.status(200).json({
-            message: "Data berhasil disimpan seluruhnya"
+            message: "Data berhasil disimpan seluruhnya",
+            data: updateData
         });
     } catch (error) {
         next(error);
