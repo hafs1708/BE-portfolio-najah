@@ -1,4 +1,6 @@
 import { Prisma } from "../application/prisma.js";
+import { Validate } from "../application/validate.js";
+import { isProfile } from "../validation/profileValidation.js";
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA PROFILE
 const get = async (req, res, next) => {
@@ -11,8 +13,8 @@ const get = async (req, res, next) => {
             // buat data dummy
             profile = {
                 email: "example@gmail.com",
-                firstName: "-",
-                lastName: "-",
+                firstname: "-",
+                lastname: "-",
                 dob: "1900-01-01",
                 address: "-"
             };
@@ -30,10 +32,40 @@ const get = async (req, res, next) => {
 };
 
 // PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA PROFILE
-const put = (req, res) => {
-    res.status(200).json({
-        message: "Data berhasil disimpan seluruhnya"
-    });
+const put = async (req, res, next) => {
+    try {
+        // GET DATA PROFILE DARI DB, FIND FIRST
+        const profile = await Prisma.profile.findFirst();
+
+        // Collect data & validate
+        let data = req.body;
+        // validasi
+        data = Validate(isProfile, data)
+
+        let dataProfile = {};
+        if (!profile) {
+            // JIKA NULL, MAKA BUAT DATA BARU - CERATE
+            dataProfile = await Prisma.profile.create({
+                data: data
+            });
+
+        } else {
+            // JIKA ADA ISINYA, UPDATE DATA TERSEBUT - UPDATE
+            dataProfile = await Prisma.profile.update({
+                where: {
+                    email: profile.email
+                },
+                data: data
+            });
+        }
+
+        res.status(200).json({
+            message: "Data berhasil disimpan seluruhnya",
+            data: dataProfile
+        });
+    } catch (error) {
+        next(error);
+    }
 };
 
 export default {
