@@ -3,6 +3,7 @@ import authController from '../controller/authController.js';
 import blogController from '../controller/blogController.js';
 import profileController from '../controller/profileController.js';
 import educationController from '../controller/educationController.js';
+import projectController from '../controller/projectController.js';
 
 export const routerPublic = express.Router();
 
@@ -21,5 +22,7 @@ routerPublic.get('/education/:id', educationController.get);
 routerPublic.get('/profile', profileController.get) // get profile
 
 // PROJECT
+routerPublic.get('/project', projectController.getAll); // get all projects
+routerPublic.get('/project/:id', projectController.get); // get by id
 
 // SKILL
