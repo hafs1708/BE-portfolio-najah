@@ -172,7 +172,7 @@ const remove = async (req, res, next) => {
             where: {
                 id: id
             }
-        })
+        });
 
         res.status(200).json({
             message: "Data berhasil dihapus"

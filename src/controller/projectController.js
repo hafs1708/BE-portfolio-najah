@@ -97,7 +97,7 @@ const put = async (req, res, next) => {
         });
 
         res.status(200).json({
-            message: "Data berhasil disimpan seluruhnya",
+            message: "Berhasil update data keseluruhan project",
             data: updateData
         });
     } catch (error) {
@@ -106,8 +106,31 @@ const put = async (req, res, next) => {
 };
 
 // PATH: METHOD DELETE UNTUK MENGHAPUS DATA project SESUAI ID
-const remove = (req, res, next) => {
+const remove = async (req, res, next) => {
     try {
+        let id = req.params.id;
+
+        // VALIDATE ID
+        id = Validate(isID, id);
+
+        const currentProject = await Prisma.project.findUnique({
+            where: {
+                id: id
+            },
+            select: {
+                id: true
+            }
+        });
+
+        if (!currentProject) throw new ResponseError(404, `Project dengan ${id} tidak ditemukan`);
+
+        // EKSEKUSI DELETE
+        await Prisma.project.delete({
+            where: {
+                id: id
+            }
+        })
+
         res.status(200).json({
             message: "Data berhasil dihapus"
         });
