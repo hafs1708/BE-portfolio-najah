@@ -148,7 +148,8 @@ const remove = async (req, res) => {
                 id: id
             },
             select: {
-                id: true
+                id: true,
+                skillCategoryId: true
             }
         });
 
@@ -160,6 +161,12 @@ const remove = async (req, res) => {
                 id: id
             }
         });
+
+        // remove category
+        // id category sebelumnya
+        const previous_skill_id = currentSkill.skillCategoryId;
+        console.log(previous_skill_id)
+        await skillService.remove_category(previous_skill_id);
 
         res.status(200).json({
             message: "Data skill berhasil dihapus"
