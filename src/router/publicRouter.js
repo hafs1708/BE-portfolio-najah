@@ -4,6 +4,7 @@ import blogController from '../controller/blogController.js';
 import profileController from '../controller/profileController.js';
 import educationController from '../controller/educationController.js';
 import projectController from '../controller/projectController.js';
+import skillController from '../controller/skillController.js';
 
 export const routerPublic = express.Router();
 
@@ -26,3 +27,5 @@ routerPublic.get('/projects', projectController.getAll); // get all projects
 routerPublic.get('/project/:id', projectController.get); // get by id
 
 // SKILL
+routerPublic.get('/skills', skillController.getAll);
+routerPublic.get('/skill/:id', skillController.get);

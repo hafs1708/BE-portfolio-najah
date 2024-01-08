@@ -1,5 +1,8 @@
+import { Prisma } from "../application/prisma.js";
+
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA SKILL
-const get = (req, res) => {
+const get = async (req, res) => {
+    const data = await Prisma.skill.findMany()
     res.status(200).json({
         message: "Berhasil"
     });
@@ -34,6 +37,7 @@ const remove = (req, res) => {
 };
 
 export default {
+    getAll,
     get,
     post,
     put,
