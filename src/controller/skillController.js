@@ -79,24 +79,84 @@ const post = async (req, res, next) => {
 };
 
 // PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA skill
-const put = (req, res) => {
-    res.status(200).json({
-        message: "Data berhasil disimpan seluruhnya"
-    });
-};
+const put = async (req, res, next) => {
+    try {
+        let skill = req.body;
+        let id = req.params.id;
 
-// PATH: METHOD PATCH UNTUK MENYIMPAN SEBAGIAN DATA skill
-const patch = (req, res) => {
-    res.status(200).json({
-        message: "Data sebagian berhasil disimpan"
-    });
+        // VALIDATE ID
+        id = Validate(isID, id);
+
+        // START JOI VALIDATE
+        skill = Validate(isSkill, blog);
+
+        const currentSkill = await Prisma.skill.findUnique({
+            where: {
+                id: id
+            },
+            select: {
+                id: true
+            }
+        });
+
+        if (!currentSkill) throw new ResponseError(404, `Skill dengan ${id} tidak ditemukan`);
+
+        // handle category dahulu
+        const category_id = await skillService.find_or_create_skill_category(skill, category);
+
+        const update_data = {
+            title: skill.title,
+            skillCategoryId: category_id
+        }
+
+        const updateSkill = await Prisma.skill.update({
+            where: {
+                id: id
+            },
+            data: update_data
+        });
+
+        res.status(200).json({
+            message: "Berhasil update data skill",
+            data: updateSkill
+        });
+    } catch (error) {
+        next(error)
+    }
 };
 
 // PATH: METHOD DELETE UNTUK MENGHAPUS DATA skill SESUAI ID
-const remove = (req, res) => {
-    res.status(200).json({
-        message: "Data berhasil dihapus"
-    });
+const remove = async (req, res) => {
+    try {
+        let id = req.params.id;
+
+        // VALIDATE ID
+        id = Validate(isID, id);
+
+        const currentSkill = await Prisma.skill.findUnique({
+            where: {
+                id: id
+            },
+            select: {
+                id: true
+            }
+        });
+
+        if (!currentSkill) throw new ResponseError(404, `Skill dengan ${id} tidak ditemukan`);
+
+        // EKSEKUSI DELETE
+        await Prisma.skill.delete({
+            where: {
+                id: id
+            }
+        });
+
+        res.status(200).json({
+            message: "Data skill berhasil dihapus"
+        });
+    } catch (error) {
+        next(error);
+    }
 };
 
 export default {
@@ -104,6 +164,5 @@ export default {
     get,
     post,
     put,
-    patch,
     remove
 }

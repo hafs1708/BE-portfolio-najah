@@ -180,7 +180,6 @@ const remove = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-
 };
 
 export default {
