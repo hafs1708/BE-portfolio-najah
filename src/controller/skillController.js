@@ -81,6 +81,7 @@ const post = async (req, res, next) => {
 // PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA skill
 const put = async (req, res, next) => {
     try {
+        console.log("masuk method put");
         let skill = req.body;
         let id = req.params.id;
 
@@ -88,21 +89,24 @@ const put = async (req, res, next) => {
         id = Validate(isID, id);
 
         // START JOI VALIDATE
-        skill = Validate(isSkill, blog);
+        skill = Validate(isSkill, skill);
 
         const currentSkill = await Prisma.skill.findUnique({
             where: {
                 id: id
             },
             select: {
-                id: true
+                id: true,
+                skillCategoryId: true
             }
         });
+        console.log(currentSkill);
 
+        // handle not found
         if (!currentSkill) throw new ResponseError(404, `Skill dengan ${id} tidak ditemukan`);
 
         // handle category dahulu
-        const category_id = await skillService.find_or_create_skill_category(skill, category);
+        const category_id = await skillService.find_or_create_skill_category(skill.category);
 
         const update_data = {
             title: skill.title,
@@ -115,6 +119,12 @@ const put = async (req, res, next) => {
             },
             data: update_data
         });
+
+        // remove category
+        // id category sebelumnya
+        const previous_skill_id = currentSkill.skillCategoryId;
+        console.log(previous_skill_id)
+        await skillService.remove_category(previous_skill_id);
 
         res.status(200).json({
             message: "Berhasil update data skill",

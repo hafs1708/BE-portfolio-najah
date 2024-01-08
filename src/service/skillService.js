@@ -25,6 +25,35 @@ const find_or_create_skill_category = async (title) => {
     return newCategory.id;
 }
 
+const remove_category = async (previous_skill_id) => {
+    // hapus category sebelumnya
+    const category = await Prisma.skillCategory.findUnique({
+        where: {
+            id: previous_skill_id
+        },
+        include: {
+            _count: {
+                select: {
+                    Skill: true
+                }
+            }
+        }
+    });
+    console.log("category")
+    console.log(category)
+
+    // count skills, kalo 0, category di hapus
+    if (category._count.Skill == 0) {
+        // remove 
+        await Prisma.skillCategory.delete({
+            where: {
+                id: previous_skill_id
+            }
+        })
+    };
+}
+
 export default {
-    find_or_create_skill_category
+    find_or_create_skill_category,
+    remove_category
 };
