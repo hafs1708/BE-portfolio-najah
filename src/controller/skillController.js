@@ -1,6 +1,8 @@
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
+import { ResponseError } from "../error/responseError.js";
 import skillService from "../service/skillService.js";
+import { isID } from "../validation/mainValidation.js";
 import { isSkill } from "../validation/skillValidation.js";
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA SKILL
@@ -17,11 +19,32 @@ const getAll = async (req, res) => {
 };
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA SKILL
-const get = async (req, res) => {
-    const data = await Prisma.skill.findMany()
-    res.status(200).json({
-        message: "Berhasil"
-    });
+const get = async (req, res, next) => {
+    try {
+        let id = req.params.id;
+
+        // VALIDATE ID
+        id = Validate(isID, id);
+
+        const skill = await Prisma.skill.findUnique({
+            where: {
+                id: id
+            },
+            include: {
+                category: true
+            }
+        });
+
+        // HANDLE NOT FOUND
+        if (skill == null) throw new ResponseError(404, `Skill dengan ${id} tidak ditemukan`);
+
+        res.status(200).json({
+            message: "Berhasil mendapat data skill",
+            data: skill
+        });
+    } catch (error) {
+        next(error)
+    }
 };
 
 // PATH: METHOD POST UNTUK MENYIMPAN DATA skill
