@@ -5,9 +5,14 @@ import { isSkill } from "../validation/skillValidation.js";
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA SKILL
 const getAll = async (req, res) => {
-    const data = await Prisma.skill.findMany()
+    const data = await Prisma.skill.findMany({
+        include: {
+            category: true
+        }
+    })
     res.status(200).json({
-        message: "Berhasil"
+        message: "Berhasil mendapat data skill",
+        data: data
     });
 };
 
@@ -49,31 +54,6 @@ const post = async (req, res, next) => {
         next(error);
     }
 };
-
-// const find_or_create_skill_category = async (title) => {
-//     // KALO NGGAK ADA, MAKA BUAT CATEGORY
-//     // KALO ADA, LANGSUNG PASANGKAN
-
-//     // find category
-//     const category = await Prisma.skillCategory.findFirst({
-//         where: {
-//             title: title
-//         }
-//     });
-
-//     // jika ada, langsung return id
-//     if (category) return category.id;
-
-//     // or create category
-//     const newCategory = await Prisma.skillCategory.create({
-//         data: {
-//             title: title
-//         }
-//     });
-
-//     // return id yang baru
-//     return newCategory.id;
-// }
 
 // PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA skill
 const put = (req, res) => {
