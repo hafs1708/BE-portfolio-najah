@@ -1,5 +1,6 @@
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
+import skillService from "../service/skillService.js";
 import { isSkill } from "../validation/skillValidation.js";
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA SKILL
@@ -27,7 +28,8 @@ const post = async (req, res, next) => {
         data = Validate(isSkill, data);
 
         // AMBIL ID CATEGORY => FIND OR CREATE
-        const id_category = await find_or_create_skill_category(data.category);
+        // const id_category = await find_or_create_skill_category(data.category);
+        const id_category = await skillService.find_or_create_skill_category(data.category);
 
         // CREATE SKILL
         // buat data skill yang mau di simpan
@@ -48,30 +50,30 @@ const post = async (req, res, next) => {
     }
 };
 
-const find_or_create_skill_category = async (title) => {
-    // KALO NGGAK ADA, MAKA BUAT CATEGORY
-    // KALO ADA, LANGSUNG PASANGKAN
+// const find_or_create_skill_category = async (title) => {
+//     // KALO NGGAK ADA, MAKA BUAT CATEGORY
+//     // KALO ADA, LANGSUNG PASANGKAN
 
-    // find category
-    const category = await Prisma.skillCategory.findFirst({
-        where: {
-            title: title
-        }
-    });
+//     // find category
+//     const category = await Prisma.skillCategory.findFirst({
+//         where: {
+//             title: title
+//         }
+//     });
 
-    // jika ada, langsung return id
-    if (category) return category.id;
+//     // jika ada, langsung return id
+//     if (category) return category.id;
 
-    // or create category
-    const newCategory = await Prisma.skillCategory.create({
-        data: {
-            title: title
-        }
-    });
+//     // or create category
+//     const newCategory = await Prisma.skillCategory.create({
+//         data: {
+//             title: title
+//         }
+//     });
 
-    // return id yang baru
-    return newCategory.id;
-}
+//     // return id yang baru
+//     return newCategory.id;
+// }
 
 // PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA skill
 const put = (req, res) => {
