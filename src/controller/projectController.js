@@ -122,7 +122,7 @@ const remove = async (req, res, next) => {
             }
         });
 
-        // Check Current Data
+        // Check Current
         if (!currentProject) throw new ResponseError(404, `Project dengan ${id} tidak ditemukan`);
 
         // EKSEKUSI DELETE
