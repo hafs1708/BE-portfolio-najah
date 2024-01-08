@@ -40,7 +40,8 @@ const post = async (req, res, next) => {
         });
 
         res.status(200).json({
-            message: "Data berhasil disimpan"
+            message: "Data berhasil disimpan",
+            data: skill_data
         });
     } catch (error) {
         next(error);
