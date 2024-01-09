@@ -12,7 +12,7 @@ const getAll = async (req, res, next) => {
 
         res.status(200).json({
             message: "Berhasil mendapatkan semua data education",
-            educations: educations
+            educations
         });
     } catch (error) {
         next(error);
@@ -81,8 +81,7 @@ const put = async (req, res, next) => {
         if (!currentEducation) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
         const data = await Prisma.education.update({
-            where: { id },
-            data
+            where: { id }, data
         });
 
         res.status(200).json({
