@@ -18,9 +18,7 @@ const login = async (req, res, next) => {
 
         // check apakah user & email valid
         const user = await Prisma.user.findUnique({
-            where: {
-                email: loginData.email
-            }
+            where: { email: loginData.email }
         });
 
         if (!user) throw new ResponseError(400, "Email or Password is invalid");
@@ -41,8 +39,8 @@ const login = async (req, res, next) => {
 
         res.status(200).json({
             message: "Anda berhasil login",
-            data: data,
-            token: token
+            data,
+            token
         });
     } catch (error) {
         next(error)
@@ -58,15 +56,9 @@ const logout = async (req, res, next) => {
         const email = user.email;
 
         await Prisma.user.update({
-            where: {
-                email: email
-            },
-            data: {
-                token: null
-            },
-            select: {
-                email: true
-            }
+            where: { email },
+            data: { token: null },
+            select: { email: true }
         });
 
         // BUAT TOKEN UMUR 1 DETIK = 1s

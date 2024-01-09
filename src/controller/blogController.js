@@ -12,7 +12,7 @@ const getAll = async (req, res, next) => {
 
         res.status(200).json({
             message: "Berhasil mendapatkan semua data blog",
-            blogs: blogs
+            blogs
         });
     } catch (error) {
         next(error);
@@ -28,9 +28,7 @@ const get = async (req, res, next) => {
         id = Validate(isID, id);
 
         const blog = await Prisma.blog.findUnique({
-            where: {
-                id: id
-            }
+            where: { id }
         });
 
         // HANDLE NOT FOUND
@@ -38,7 +36,7 @@ const get = async (req, res, next) => {
 
         res.status(200).json({
             message: "Berhasil mendapatkan data blog berdasarkan id = " + id,
-            blog: blog
+            blog
         });
     } catch (error) {
         next(error);
@@ -53,13 +51,13 @@ const post = async (req, res, next) => {
         // START JOI VALIDATE
         blog = Validate(isBlog, blog);
 
-        const newBlog = await Prisma.blog.create({
+        const data = await Prisma.blog.create({
             data: blog
         });
 
         res.status(200).json({
             message: "Data berhasil disimpan",
-            data: newBlog
+            data
         });
     } catch (error) {
         next(error);
@@ -80,26 +78,20 @@ const put = async (req, res, next) => {
         blog = Validate(isBlog, blog);
 
         const currentBlog = await Prisma.blog.findUnique({
-            where: {
-                id: id
-            },
-            select: {
-                id: true
-            }
+            where: { id },
+            select: { id: true }
         });
 
         if (!currentBlog) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
-        const updateData = await Prisma.blog.update({
-            where: {
-                id: id
-            },
+        const data = await Prisma.blog.update({
+            where: { id },
             data: blog
         });
 
         res.status(200).json({
             message: "Berhasil update data keseluruhan blog",
-            data: updateData
+            data
         });
     } catch (error) {
         next(error);
@@ -119,29 +111,21 @@ const updateTitle = async (req, res, next) => {
         title = Validate(isBlogTitle, title);
 
         const currentBlog = await Prisma.blog.findUnique({
-            where: {
-                id: id
-            },
-            select: {
-                id: true
-            }
+            where: { id },
+            select: { id: true }
         });
 
         if (!currentBlog) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
         // EKSEKUSI PATCH
-        const updateTitle = await Prisma.blog.update({
-            where: {
-                id: id
-            },
-            data: {
-                title: title
-            }
+        const data = await Prisma.blog.update({
+            where: { id },
+            data: { title }
         });
 
         res.status(200).json({
             message: "Data sebagian berhasil diubah",
-            data: updateTitle
+            data
         });
     } catch (error) {
         next(error);
@@ -157,21 +141,15 @@ const remove = async (req, res, next) => {
         id = Validate(isID, id);
 
         const currentBlog = await Prisma.blog.findUnique({
-            where: {
-                id: id
-            },
-            select: {
-                id: true
-            }
+            where: { id },
+            select: { id: true }
         });
 
         if (!currentBlog) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
         // EKSEKUSI DELETE
         await Prisma.blog.delete({
-            where: {
-                id: id
-            }
+            where: { id }
         });
 
         res.status(200).json({

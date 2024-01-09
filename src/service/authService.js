@@ -18,27 +18,20 @@ const createToken = (email, res, age) => {
 
     // CARA UNTUK KIRIM COOKIE KE CLIENT/BROWSER
     res.cookie("token", token);
-
     return token;
 }
 
 const updatedUserData = async (email, token) => {
     const data_user = await Prisma.user.update({
-        where: {
-            email: email
-        },
-        data: {
-            token: token
-        },
+        where: { email },
+        data: { token },
         select: {
             email: true,
             name: true,
         }
     });
-
     return data_user;
 }
-
 
 export default {
     createToken,

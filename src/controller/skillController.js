@@ -14,7 +14,7 @@ const getAll = async (req, res) => {
     })
     res.status(200).json({
         message: "Berhasil mendapat data skill",
-        data: data
+        data
     });
 };
 
@@ -26,21 +26,17 @@ const get = async (req, res, next) => {
         // VALIDATE ID
         id = Validate(isID, id);
 
-        const skill = await Prisma.skill.findUnique({
-            where: {
-                id: id
-            },
-            include: {
-                category: true
-            }
+        const data = await Prisma.skill.findUnique({
+            where: { id },
+            include: { category: true }
         });
 
         // HANDLE NOT FOUND
-        if (skill == null) throw new ResponseError(404, `Skill dengan ${id} tidak ditemukan`);
+        if (data == null) throw new ResponseError(404, `Skill dengan ${id} tidak ditemukan`);
 
         res.status(200).json({
             message: "Berhasil mendapat data skill",
-            data: skill
+            data
         });
     } catch (error) {
         next(error)
@@ -51,8 +47,6 @@ const get = async (req, res, next) => {
 const post = async (req, res, next) => {
     try {
         let data = req.body;
-
-        // START JOI VALIDATE
         data = Validate(isSkill, data);
 
         // AMBIL ID CATEGORY => FIND OR CREATE
@@ -81,26 +75,20 @@ const post = async (req, res, next) => {
 // PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA skill
 const put = async (req, res, next) => {
     try {
-        console.log("masuk method put");
         let skill = req.body;
         let id = req.params.id;
-
-        // VALIDATE ID
         id = Validate(isID, id);
 
         // START JOI VALIDATE
         skill = Validate(isSkill, skill);
 
         const currentSkill = await Prisma.skill.findUnique({
-            where: {
-                id: id
-            },
+            where: { id },
             select: {
                 id: true,
                 skillCategoryId: true
             }
         });
-        console.log(currentSkill);
 
         // handle not found
         if (!currentSkill) throw new ResponseError(404, `Skill dengan ${id} tidak ditemukan`);
@@ -113,10 +101,8 @@ const put = async (req, res, next) => {
             skillCategoryId: category_id
         }
 
-        const updateSkill = await Prisma.skill.update({
-            where: {
-                id: id
-            },
+        const data = await Prisma.skill.update({
+            where: { id },
             data: update_data
         });
 
@@ -128,7 +114,7 @@ const put = async (req, res, next) => {
 
         res.status(200).json({
             message: "Berhasil update data skill",
-            data: updateSkill
+            data
         });
     } catch (error) {
         next(error)
@@ -139,14 +125,10 @@ const put = async (req, res, next) => {
 const remove = async (req, res) => {
     try {
         let id = req.params.id;
-
-        // VALIDATE ID
         id = Validate(isID, id);
 
         const currentSkill = await Prisma.skill.findUnique({
-            where: {
-                id: id
-            },
+            where: { id },
             select: {
                 id: true,
                 skillCategoryId: true
@@ -157,9 +139,7 @@ const remove = async (req, res) => {
 
         // EKSEKUSI DELETE
         await Prisma.skill.delete({
-            where: {
-                id: id
-            }
+            where: { id }
         });
 
         // remove category

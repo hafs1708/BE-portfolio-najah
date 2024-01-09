@@ -4,17 +4,13 @@ import authService from "../service/authService.js";
 
 export const authMiddleware = async (req, res, next) => {
     try {
-        console.log("PROSES CEK AUTHENTICATION");
-
         // CHECK TOKEN FROM COOKIE
         const token = req.cookies.token
         if (!token) throw new Error();
 
         // CHECK USER BY TOKEN
         const user = await Prisma.user.findFirst({
-            where: {
-                token: token
-            }
+            where: { token }
         });
 
         if (!user) throw new Error();

@@ -27,9 +27,7 @@ const get = async (req, res, next) => {
         id = Validate(isID, id);
 
         const education = await Prisma.education.findUnique({
-            where: {
-                id: id
-            }
+            where: { id }
         });
 
         // HANDLE NOT FOUND
@@ -51,13 +49,13 @@ const post = async (req, res, next) => {
 
         education = Validate(isEducation, education);
 
-        const newEducation = await Prisma.education.create({
+        const data = await Prisma.education.create({
             data: education
         });
 
         res.status(200).json({
             message: "Data berhasil disimpan",
-            data: newEducation
+            data
         });
     } catch (error) {
         next(error)
@@ -76,21 +74,15 @@ const put = async (req, res, next) => {
         education = Validate(isEducation, education);
 
         const currentEducation = await Prisma.education.findUnique({
-            where: {
-                id: id
-            },
-            select: {
-                id: true
-            }
+            where: { id },
+            select: { id: true }
         });
 
         if (!currentEducation) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
-        const updateData = await Prisma.education.update({
-            where: {
-                id: id
-            },
-            data: education
+        const data = await Prisma.education.update({
+            where: { id },
+            data
         });
 
         res.status(200).json({
@@ -122,21 +114,15 @@ const remove = async (req, res, next) => {
         id = Validate(isID, id);
 
         const currentEducation = await Prisma.education.findUnique({
-            where: {
-                id: id
-            },
-            select: {
-                id: true
-            }
+            where: { id },
+            select: { id: true }
         });
 
         if (!currentEducation) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
         // EKSEKUSI DELETE
         await Prisma.education.delete({
-            where: {
-                id: id
-            }
+            where: { id }
         });
 
         res.status(200).json({

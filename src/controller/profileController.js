@@ -46,16 +46,14 @@ const put = async (req, res, next) => {
         if (!profile) {
             // JIKA NULL, MAKA BUAT DATA BARU - CERATE
             dataProfile = await Prisma.profile.create({
-                data: data
+                data
             });
 
         } else {
             // JIKA ADA ISINYA, UPDATE DATA TERSEBUT - UPDATE
             dataProfile = await Prisma.profile.update({
-                where: {
-                    email: profile.email
-                },
-                data: data
+                where: { email: profile.email },
+                data
             });
         }
 

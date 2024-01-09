@@ -2,9 +2,7 @@ import Joi from "joi";
 import { ResponseError } from "../error/responseError.js";
 
 export const errorMiddleware = (error, req, res, next) => {
-    if (!error) {
-        return next();
-    }
+    if (!error) { return next() }
 
     // RESPONSE ERROR
     if (error instanceof ResponseError) {
