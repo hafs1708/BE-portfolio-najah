@@ -1,6 +1,6 @@
 {
   "name": "portfolio",
-  "version": "0.0.1-alpha",
+  "version": "1.0.0-alpha",
   "description": "\"Belajar Express untuk membuat Portfolio App / Backend\"",
   "main": "app.js",
   "scripts": {
