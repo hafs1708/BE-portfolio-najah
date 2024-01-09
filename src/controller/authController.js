@@ -14,24 +14,22 @@ const login = async (req, res, next) => {
     try {
         // ambil data body => email & password
         let loginData = req.body;
-        loginData = Validate(loginValidation, loginData);
+        const { email, password } = Validate(loginValidation, loginData);
 
         // check apakah user & email valid
         const user = await Prisma.user.findUnique({
-            where: { email: loginData.email }
+            where: { email }
         });
 
         if (!user) throw new ResponseError(400, "Email or Password is invalid");
 
         // CHECK PASSWORD HASH
-        const clientPassword = loginData.password;
         const dbPassword = user.password;
         const checkPassword = await bycrpt.compare(clientPassword, dbPassword);
 
         if (!checkPassword) throw new ResponseError(400, "Email or Password is invalid");
 
         // CREATE TOKEN
-        const email = user.email
         const token = authService.createToken(email, res)
 
         // UPDATE DATA USER, Masukkan ke token
