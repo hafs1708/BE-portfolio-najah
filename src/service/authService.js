@@ -8,12 +8,12 @@ import { Prisma } from '../application/prisma.js';
 // PECAH METHOD
 // - CREATE TOKEN
 
-const createToken = (email, res, age) => {
+const createToken = (email, res, age = process.env.SESSION_AGE) => {
     const jwtscreet = process.env.JWT_SCREET;
-    const maxAge = age ? age : process.env.SESSION_AGE;
+    // const maxAge = age ? age : process.env.SESSION_AGE;
 
     var token = jwt.sign({ email: email }, jwtscreet, {
-        expiresIn: maxAge
+        expiresIn: age
     });
 
     // CARA UNTUK KIRIM COOKIE KE CLIENT/BROWSER
