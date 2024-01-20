@@ -27,6 +27,10 @@ model Profile {
   lastname  String   @db.VarChar(100)
   dob       DateTime @db.Date
   address   String   @db.Text
+  city      String   @db.VarChar(100)
+  country   String   @db.VarChar(100)
+  job       String   @db.VarChar(100)
+  phone     String   @db.VarChar(20)
   bio       String?  @db.Text
   website   String?  @db.VarChar(100)
   github    String?  @db.VarChar(100)
