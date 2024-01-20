@@ -115,15 +115,15 @@ model Skill {
 }
 
 model Experience {
-  id          Int      @id @default(autoincrement())
-  company     String   @db.VarChar(100)
-  location    String   @db.VarChar(100)
-  title       String   @db.VarChar(100)
-  description String   @db.Text
-  startDate   DateTime @db.Date
-  endDate     DateTime @db.Date
-  craetedAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
+  id          Int       @id @default(autoincrement())
+  company     String    @db.VarChar(100)
+  location    String    @db.VarChar(100)
+  title       String    @db.VarChar(100)
+  description String    @db.Text
+  startDate   DateTime  @db.Date
+  endDate     DateTime? @db.Date
+  craetedAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
 
   @@map("experience")
 }
