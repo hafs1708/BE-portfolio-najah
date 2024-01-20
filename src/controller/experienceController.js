@@ -31,7 +31,7 @@ const get = async (req, res, next) => {
         });
 
         // HANDLE NOT FOUND
-        if (experience == null) throw new ResponseError(404, `Experience dengan ${id} tidak ditemukan`);
+        if (experience == null) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
         res.status(200).json({
             message: "Berhasil"
