@@ -25,9 +25,11 @@ const login = async (req, res, next) => {
 
         // CHECK PASSWORD HASH
         const dbPassword = user.password;
-        const checkPassword = await bycrpt.compare(clientPassword, dbPassword);
+        const checkPassword = await bycrpt.compare(password, dbPassword);
 
         if (!checkPassword) throw new ResponseError(400, "Email or Password is invalid");
+        // console.log(data);
+        // return;
 
         // CREATE TOKEN
         const token = authService.createToken(email, res)
