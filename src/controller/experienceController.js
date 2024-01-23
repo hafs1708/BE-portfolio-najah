@@ -8,11 +8,11 @@ import { isID } from "../validation/mainValidation.js";
 const getAll = async (req, res, next) => {
     try {
         // FIND MANY -> ambil semua blog
-        const experiences = await Prisma.experience.findMany();
+        const data = await Prisma.experience.findMany();
 
         res.status(200).json({
             message: "Berhasil mendapatkan semua data experience",
-            experiences
+            data
         });
     } catch (error) {
         next(error);
@@ -26,15 +26,16 @@ const get = async (req, res, next) => {
 
         id = Validate(isID, id);
 
-        const experience = await Prisma.experience.findUnique({
+        const data = await Prisma.experience.findFirst({
             where: { id }
         });
 
         // HANDLE NOT FOUND
-        if (experience == null) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
+        if (data == null) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
         res.status(200).json({
-            message: "Berhasil"
+            message: "Berhasil",
+            data
         });
     } catch (error) {
         next(error)
@@ -45,17 +46,17 @@ const get = async (req, res, next) => {
 // PATH: METHOD POST UNTUK MENYIMPAN DATA EDUCATION
 const post = async (req, res, next) => {
     try {
-        let experince = req.body;
+        let data = req.body;
 
-        experince = Validate(isExperience, experince);
+        data = Validate(isExperience, data);
 
-        const data = await Prisma.experince.create({
-            data: experince
+        const newExperience = await Prisma.experience.create({
+            data
         });
 
         res.status(200).json({
             message: "Data berhasil disimpan",
-            data
+            data: newExperience
         });
     } catch (error) {
         next(error)
@@ -81,23 +82,12 @@ const put = async (req, res, next) => {
         if (!currentExperience) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
         const data = await Prisma.experience.update({
-            where: { id }, data
+            where: { id }, data: experience
         });
 
         res.status(200).json({
-            message: "Data berhasil disimpan seluruhnya"
-        });
-    } catch (error) {
-        next(error)
-    }
-
-};
-
-// PATH: METHOD PATCH UNTUK MENYIMPAN SEBAGIAN DATA EXPERIENCE
-const patch = (req, res, next) => {
-    try {
-        res.status(200).json({
-            message: "Data sebagian berhasil disimpan"
+            message: "Data berhasil disimpan seluruhnya",
+            data: experience
         });
     } catch (error) {
         next(error)
@@ -125,7 +115,8 @@ const remove = async (req, res, next) => {
         });
 
         res.status(200).json({
-            message: "Data berhasil dihapus"
+            message: "Data berhasil dihapus",
+            id
         });
     } catch (error) {
         next(error)
@@ -138,6 +129,5 @@ export default {
     get,
     post,
     put,
-    patch,
     remove
 }

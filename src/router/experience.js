@@ -1,5 +1,5 @@
 import express from 'express';
-import experienceController from '../controller/experienceController';
+import experienceController from '../controller/experienceController.js';
 
 export const routerExperience = express.Router();
 

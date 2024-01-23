@@ -32,5 +32,5 @@ routerPublic.get('/skills', skillController.getAll);
 routerPublic.get('/skill/:id', skillController.get);
 
 // EXPERIENCE
-routerPublic.get('experiences', experienceController.getAll);
-routerPublic.get('experience/:id', experienceController.get);
+routerPublic.get('/experiences', experienceController.getAll);
+routerPublic.get('/experience/:id', experienceController.get);

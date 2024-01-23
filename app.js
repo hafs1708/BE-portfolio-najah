@@ -11,6 +11,7 @@ import { routerProject } from "./src/router/project.js";
 import { routerBlog } from "./src/router/blog.js";
 import { routerSkill } from "./src/router/skill.js";
 import { routerAuth } from "./src/router/auth.js";
+import { routerExperience } from "./src/router/experience.js";
 import { logging } from "./src/middleware/logging.js";
 import { notFound } from "./src/middleware/notfound.js";
 import { ResponseError } from './src/error/responseError.js';
@@ -55,6 +56,9 @@ app.use(routerSkill);
 
 // ROUTER AUTH
 app.use(routerAuth);
+
+// ROUTER EXPERIENCE
+app.use(routerExperience)
 
 // MIDDLEWARE UNTUK PATH ASING / UNKNOWN PAGE
 app.use(notFound);
