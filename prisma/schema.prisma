@@ -25,6 +25,7 @@ model Profile {
   email     String   @id @db.VarChar(100)
   firstname String   @db.VarChar(100)
   lastname  String   @db.VarChar(100)
+  avatar    String?  @db.VarChar(255)
   dob       DateTime @db.Date
   address   String   @db.Text
   city      String   @db.VarChar(100)
