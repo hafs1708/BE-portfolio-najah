@@ -18,7 +18,7 @@ import { ResponseError } from './src/error/responseError.js';
 import { errorMiddleware } from './src/middleware/errorMiddleware.js';
 import { routerPublic } from './src/router/publicRouter.js';
 import { authMiddleware } from './src/middleware/authMiddleware.js';
-// import { JoiError } from './src/application/validate.js';
+import fileService from './src/service/fileService.js';
 
 // deklarasi aplikasi express
 const app = express();
@@ -31,6 +31,9 @@ app.use(cookieParser());
 
 // MIDDLEWARE LOGGING
 app.use(logging);
+
+// CREATE FOLDER UPLOADS
+fileService.createFolder('./uploads');
 
 // PUBLIC API / TANPA LOGIN
 app.use(routerPublic);
