@@ -39,11 +39,18 @@ const put = async (req, res, next) => {
 
         // Collect data & validate
         let data = req.body;
+
+        // check apakah ada data file
+        if (req.file) {
+            const avatar = '/' + req.file.path.replaceAll('\\', '/')
+            data.avatar = avatar;
+        }
+
         // validasi
         data = Validate(isProfile, data)
 
         let dataProfile = {};
-        if (!profile) {
+        if (!dataProfile) {
             // JIKA NULL, MAKA BUAT DATA BARU - CERATE
             dataProfile = await Prisma.profile.create({
                 data

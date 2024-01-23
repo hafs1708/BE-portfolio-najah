@@ -5,6 +5,7 @@ const isProfile = Joi.object({
     email: Joi.string().trim().email().lowercase().required(),
     firstname: isString100.required(),
     lastname: isString100.required(),
+    avatar: Joi.string().max(255).optional(),
     dob: Joi.date().less('now'),
     address: isText.required(),
     city: isString100.required(),
