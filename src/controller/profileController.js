@@ -1,5 +1,6 @@
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
+import fileService from "../service/fileService.js";
 import { isProfile } from "../validation/profileValidation.js";
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA PROFILE
@@ -64,11 +65,23 @@ const put = async (req, res, next) => {
             });
         }
 
+        // hapus foto lama
+
+        if (profile.avatar) {
+            await fileService.removeFile(profile.avatar);
+        }
+
         res.status(200).json({
             message: "Data berhasil disimpan seluruhnya",
             data: dataProfile
         });
     } catch (error) {
+        // jika error && ada file, maka file di hapus
+        console.log("handle error")
+        if (req.file) {
+            // handle buang file
+            fileService.removeFile(req.file.path)
+        }
         next(error);
     }
 };
