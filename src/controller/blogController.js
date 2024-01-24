@@ -7,17 +7,46 @@ import { ResponseError } from '../error/responseError.js';
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA BLOG
 const getAll = async (req, res, next) => {
     try {
-        // FIND MANY -> ambil semua blog
-        const blogs = await Prisma.blog.findMany();
+        // PAGE
+        const page = parseInt(req.query.page) || 1;
+
+        // LIMIT
+        const limit = parseInt(req.query.limit) || 10;
+
+        // SKIP
+        const skip = (page - 1) * limit;
+
+        // get total data
+        const { data, total } = await getPage(limit, skip);
+        const maxPage = Math.ceil(total / limit);
 
         res.status(200).json({
             message: "Berhasil mendapatkan semua data blog",
-            blogs
+            data,
+            page,
+            total,
+            limit,
+            maxPage
         });
     } catch (error) {
         next(error);
     }
 };
+
+const getPage = async (limit, skip) => {
+    const data = await Prisma.blog.findMany({
+        take: limit,
+        skip: skip
+    });
+
+    // get total data
+    const total = await Prisma.blog.count();
+
+    return {
+        data,
+        total
+    }
+}
 
 //  GET BY ID
 const get = async (req, res, next) => {
@@ -166,5 +195,6 @@ export default {
     post,
     put,
     updateTitle,
-    remove
+    remove,
+    getPage
 }
