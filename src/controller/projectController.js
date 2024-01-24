@@ -16,7 +16,7 @@ const getAll = async (req, res, next) => {
         const skip = (page - 1) * limit;
 
         // get total data
-        const { data, total } = await Prisma.getByPage(limit, skip);
+        const { data, total } = await getByPage(limit, skip);
         const maxPage = Math.ceil(total / limit);
 
         res.status(200).json({
@@ -159,5 +159,6 @@ export default {
     get,
     post,
     put,
-    remove
+    remove,
+    getByPage
 }

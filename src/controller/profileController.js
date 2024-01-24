@@ -2,6 +2,8 @@ import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
 import fileService from "../service/fileService.js";
 import { isProfile } from "../validation/profileValidation.js";
+import blogController from "./blogController.js";
+import projectController from "./projectController.js";
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA PROFILE
 const get = async (req, res, next) => {
@@ -13,6 +15,7 @@ const get = async (req, res, next) => {
             message: "Berhasil ambil data profile",
             data
         });
+
     } catch (error) {
         next(error);
     }
@@ -79,7 +82,9 @@ const portfolio = async (req, res, next) => {
         // ambil data profile
         const profile = await getProfile();
 
-        // project
+        // project // 4
+        // extract variable data menjadi variable project
+        const { data: projects } = await projectController.getByPage(4);
 
         // experience
 
@@ -88,11 +93,14 @@ const portfolio = async (req, res, next) => {
         // skill by category
 
         // blog
+        const { data: blogs } = await blogController.getPage(4);
 
         res.status(200).json({
             message: "Berhasil ambil data portfolio",
             data: {
-                profile
+                profile,
+                projects,
+                blogs
             }
 
         })
@@ -128,5 +136,5 @@ const getProfile = async () => {
 export default {
     get,
     put,
-    portfolio
+    portfolio,
 }
