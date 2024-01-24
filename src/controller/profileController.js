@@ -6,28 +6,12 @@ import { isProfile } from "../validation/profileValidation.js";
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA PROFILE
 const get = async (req, res, next) => {
     try {
-        // CEK KE DATABASE
-        let profile = await Prisma.profile.findFirst();
-
-        // JIKA KOSONG => KIRIM DATA DUMMY
-        if (!profile) {
-            // buat data dummy
-            profile = {
-                email: "example@gmail.com",
-                firstname: "-",
-                lastname: "-",
-                dob: "1900-01-01",
-                address: "-",
-                job: "-",
-                city: "-",
-                country: "-"
-            };
-        }
+        const data = await getProfile();
 
         // KALO ADA ISINYA => KIRIM DATA ASLI
         res.status(200).json({
             message: "Berhasil ambil data profile",
-            data: profile
+            data
         });
     } catch (error) {
         next(error);
@@ -89,10 +73,28 @@ const put = async (req, res, next) => {
     }
 };
 
-const portfolio = (req, res, next) => {
+
+const portfolio = async (req, res, next) => {
     try {
+        // ambil data profile
+        const profile = await getProfile();
+
+        // project
+
+        // experience
+
+        // education
+
+        // skill by category
+
+        // blog
+
         res.status(200).json({
-            message: "Berhasil ambil data portfolio"
+            message: "Berhasil ambil data portfolio",
+            data: {
+                profile
+            }
+
         })
 
     } catch (error) {
@@ -100,6 +102,27 @@ const portfolio = (req, res, next) => {
     }
 }
 
+
+const getProfile = async () => {
+    // CEK KE DATABASE
+    let profile = await Prisma.profile.findFirst();
+
+    // JIKA KOSONG => KIRIM DATA DUMMY
+    if (!profile) {
+        // buat data dummy
+        profile = {
+            email: "example@gmail.com",
+            firstname: "-",
+            lastname: "-",
+            dob: "1900-01-01",
+            address: "-",
+            job: "-",
+            city: "-",
+            country: "-"
+        };
+    }
+    return profile;
+}
 
 
 export default {
