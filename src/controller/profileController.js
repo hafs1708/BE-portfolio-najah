@@ -3,6 +3,7 @@ import { Validate } from "../application/validate.js";
 import fileService from "../service/fileService.js";
 import { isProfile } from "../validation/profileValidation.js";
 import blogController from "./blogController.js";
+import educationController from "./educationController.js";
 import projectController from "./projectController.js";
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA PROFILE
@@ -89,18 +90,20 @@ const portfolio = async (req, res, next) => {
         // experience
 
         // education
+        const { data: educations } = await educationController.getByPage(4);
 
         // skill by category
 
         // blog
-        const { data: blogs } = await blogController.getPage(4);
+        const { data: blogs } = await blogController.getByPage(4);
 
         res.status(200).json({
             message: "Berhasil ambil data portfolio",
             data: {
                 profile,
                 projects,
-                blogs
+                blogs,
+                educations
             }
 
         })

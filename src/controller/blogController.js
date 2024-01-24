@@ -17,7 +17,7 @@ const getAll = async (req, res, next) => {
         const skip = (page - 1) * limit;
 
         // get total data
-        const { data, total } = await getPage(limit, skip);
+        const { data, total } = await getByPage(limit, skip);
         const maxPage = Math.ceil(total / limit);
 
         res.status(200).json({
@@ -33,7 +33,7 @@ const getAll = async (req, res, next) => {
     }
 };
 
-const getPage = async (limit, skip) => {
+const getByPage = async (limit, skip) => {
     const data = await Prisma.blog.findMany({
         take: limit,
         skip: skip
@@ -196,5 +196,5 @@ export default {
     put,
     updateTitle,
     remove,
-    getPage
+    getByPage
 }
