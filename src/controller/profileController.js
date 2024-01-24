@@ -86,7 +86,21 @@ const put = async (req, res, next) => {
     }
 };
 
+const portfolio = (req, res, next) => {
+    try {
+        res.status(200).json({
+            message: "Berhasil ambil data portfolio"
+        })
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+
 export default {
     get,
-    put
+    put,
+    portfolio
 }

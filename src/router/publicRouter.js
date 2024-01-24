@@ -22,6 +22,7 @@ routerPublic.get('/education/:id', educationController.get);
 
 // PROFILE
 routerPublic.get('/profile', profileController.get); // get profile
+routerPublic.get('/portfolio', profileController.portfolio); // get profile
 
 // PROJECT
 routerPublic.get('/projects', projectController.getAll); // get all projects
