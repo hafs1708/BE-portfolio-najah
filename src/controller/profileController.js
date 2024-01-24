@@ -17,7 +17,10 @@ const get = async (req, res, next) => {
                 firstname: "-",
                 lastname: "-",
                 dob: "1900-01-01",
-                address: "-"
+                address: "-",
+                job: "-",
+                city: "-",
+                country: "-"
             };
         }
 
