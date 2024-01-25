@@ -6,6 +6,7 @@ import blogController from "./blogController.js";
 import educationController from "./educationController.js";
 import experienceController from "./experienceController.js";
 import projectController from "./projectController.js";
+import skillController from "./skillController.js";
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA PROFILE
 const get = async (req, res, next) => {
@@ -95,6 +96,7 @@ const portfolio = async (req, res, next) => {
         const education = await educationController.getEducation();
 
         // skill by category
+        const skills = await skillController.handleSkillByCategory();
 
         // blog
         const { data: blogs } = await blogController.getByPage(1, 4);
@@ -104,9 +106,10 @@ const portfolio = async (req, res, next) => {
             data: {
                 profile,
                 projects,
-                blogs,
                 experience,
-                education
+                education,
+                skills,
+                blogs
             }
 
         })
