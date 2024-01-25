@@ -90,7 +90,7 @@ const portfolio = async (req, res, next) => {
         // experience
 
         // education
-        const { data: educations } = await educationController.getByPage(4);
+        const education = await educationController.getEducation();
 
         // skill by category
 

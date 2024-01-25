@@ -7,53 +7,22 @@ import { isID } from "../validation/mainValidation.js";
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA BLOG
 const getAll = async (req, res, next) => {
     try {
-        // PAGE
-        const page = parseInt(req.query.page) || 1;
-
-        // LIMIT
-        const limit = parseInt(req.query.limit) || 10;
-
-        // SKIP
-        const skip = (page - 1) * limit;
-
-        // get total data
-        const { data, total } = await getByPage(limit, skip);
-        const maxPage = Math.ceil(total / limit);
+        // FIND MANY -> ambil semua blog
+        const data = await getEducation();
 
         res.status(200).json({
             message: "Berhasil mendapatkan semua data education",
-            data,
-            page,
-            total,
-            limit,
-            maxPage
+            data
         });
-
-        // // FIND MANY -> ambil semua blog
-        // const educations = await Prisma.education.findMany();
-
-        // res.status(200).json({
-        //     message: "Berhasil mendapatkan semua data education",
-        //     educations
-        // });
     } catch (error) {
         next(error);
     }
 };
 
-const getByPage = async (limit, skip) => {
-    const data = await Prisma.education.findMany({
-        take: limit,
-        skip: skip
+const getEducation = async () => {
+    return await Prisma.education.findMany({
+        orderBy: { 'startYear': 'desc' }
     });
-
-    // get total data
-    const total = await Prisma.education.count();
-
-    return {
-        data,
-        total
-    }
 }
 
 //  GET BY ID
@@ -177,5 +146,5 @@ export default {
     put,
     patch,
     remove,
-    getByPage
+    getEducation
 }

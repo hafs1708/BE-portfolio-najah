@@ -30,7 +30,7 @@ const getAll = async (req, res, next) => {
     }
 };
 
-const getByPage = async (page, limit) => {
+const getByPage = async (page, limit = 10) => {
     // SKIP
     const skip = (page - 1) * limit;
 
