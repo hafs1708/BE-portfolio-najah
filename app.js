@@ -30,7 +30,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 // CORS
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000'
+}));
 
 // MIDDLEWARE LOGGING
 app.use(logging);
