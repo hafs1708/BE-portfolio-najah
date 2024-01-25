@@ -4,6 +4,7 @@ import fileService from "../service/fileService.js";
 import { isProfile } from "../validation/profileValidation.js";
 import blogController from "./blogController.js";
 import educationController from "./educationController.js";
+import experienceController from "./experienceController.js";
 import projectController from "./projectController.js";
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA PROFILE
@@ -88,6 +89,7 @@ const portfolio = async (req, res, next) => {
         const { data: projects } = await projectController.getByPage(1, 4);
 
         // experience
+        const experience = await experienceController.getExperience();
 
         // education
         const education = await educationController.getEducation();
@@ -103,7 +105,8 @@ const portfolio = async (req, res, next) => {
                 profile,
                 projects,
                 blogs,
-                educations
+                experience,
+                education
             }
 
         })

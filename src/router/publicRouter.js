@@ -31,6 +31,7 @@ routerPublic.get('/project/:id', projectController.get); // get by id
 // SKILL
 routerPublic.get('/skills', skillController.getAll);
 routerPublic.get('/skill/:id', skillController.get);
+routerPublic.get('/skill_by_category', skillController.getSkillByCategory);
 
 // EXPERIENCE
 routerPublic.get('/experiences', experienceController.getAll);
