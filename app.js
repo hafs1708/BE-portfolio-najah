@@ -4,6 +4,7 @@ dotenv.config();
 
 import express from "express";
 import cookieParser from "cookie-parser";
+import cors from 'cors';
 
 import { routerProfile } from "./src/router/profile.js";
 import { routerEducation } from "./src/router/education.js";
@@ -14,7 +15,6 @@ import { routerAuth } from "./src/router/auth.js";
 import { routerExperience } from "./src/router/experience.js";
 import { logging } from "./src/middleware/logging.js";
 import { notFound } from "./src/middleware/notfound.js";
-import { ResponseError } from './src/error/responseError.js';
 import { errorMiddleware } from './src/middleware/errorMiddleware.js';
 import { routerPublic } from './src/router/publicRouter.js';
 import { authMiddleware } from './src/middleware/authMiddleware.js';
@@ -28,6 +28,9 @@ app.use(express.json());
 
 // untuk membaca cookies
 app.use(cookieParser());
+
+// CORS
+app.use(cors());
 
 // MIDDLEWARE LOGGING
 app.use(logging);
