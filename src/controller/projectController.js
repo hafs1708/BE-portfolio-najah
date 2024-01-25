@@ -12,8 +12,7 @@ const getAll = async (req, res, next) => {
 
         // LIMIT
         const limit = parseInt(req.query.limit) || 10;
-        // SKIP
-        const skip = (page - 1) * limit;
+
 
         // get total data
         const { data, total } = await getByPage(limit, skip);
@@ -33,7 +32,10 @@ const getAll = async (req, res, next) => {
     }
 };
 
-const getByPage = async (limit, skip) => {
+const getByPage = async (page, limit) => {
+    // SKIP
+    const skip = (page - 1) * limit;
+
     const data = await Prisma.project.findMany({
         take: limit,
         skip: skip

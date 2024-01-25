@@ -85,7 +85,7 @@ const portfolio = async (req, res, next) => {
 
         // project // 4
         // extract variable data menjadi variable project
-        const { data: projects } = await projectController.getByPage(4);
+        const { data: projects } = await projectController.getByPage(1, 4);
 
         // experience
 
@@ -95,7 +95,7 @@ const portfolio = async (req, res, next) => {
         // skill by category
 
         // blog
-        const { data: blogs } = await blogController.getByPage(4);
+        const { data: blogs } = await blogController.getByPage(1, 4);
 
         res.status(200).json({
             message: "Berhasil ambil data portfolio",
