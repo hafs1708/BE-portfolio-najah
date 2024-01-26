@@ -59,9 +59,12 @@ const put = async (req, res, next) => {
         }
 
         // hapus foto lama
-
-        if (profile.avatar) {
-            await fileService.removeFile(profile.avatar);
+        const avatar_lama = portfolio.avatar;
+        const avatar_baru = dataProfile.avatar;
+        if (avatar_lama) {
+            if (avatar_lama != avatar_baru) {
+                await fileService.removeFile(profile.avatar);
+            }
         }
 
         res.status(200).json({
