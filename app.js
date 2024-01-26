@@ -5,6 +5,7 @@ dotenv.config();
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from 'cors';
+import fs from 'fs/promises';
 
 import { routerProfile } from "./src/router/profile.js";
 import { routerEducation } from "./src/router/education.js";
@@ -19,6 +20,7 @@ import { errorMiddleware } from './src/middleware/errorMiddleware.js';
 import { routerPublic } from './src/router/publicRouter.js';
 import { authMiddleware } from './src/middleware/authMiddleware.js';
 import fileService from './src/service/fileService.js';
+import { access } from 'fs';
 
 // deklarasi aplikasi express
 const app = express();
@@ -29,10 +31,23 @@ app.use(express.json());
 // untuk membaca cookies
 app.use(cookieParser());
 
-// CORS
+// HANDLE CORS
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
+
+// SET STATIC FILES
+app.use('/uploads', express.static('./uploads'));
+// Handle file not exist
+app.use('/uploads', async (req, res) => {
+    try {
+        await fs.access('./uploads' + req.url);
+    } catch (error) {
+        res.status(404).json({
+            message: "File Not Found"
+        });
+    }
+});
 
 // MIDDLEWARE LOGGING
 app.use(logging);
