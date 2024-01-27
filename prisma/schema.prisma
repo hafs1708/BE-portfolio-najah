@@ -15,7 +15,7 @@ model User {
   email     String   @id @db.VarChar(100)
   password  String   @db.VarChar(200)
   token     String?  @db.VarChar(255)
-  craetedAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
   @@map("user")
@@ -51,7 +51,7 @@ model Blog {
   id        Int      @id @default(autoincrement())
   title     String   @db.VarChar(255)
   content   String   @db.Text
-  craetedAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
   @@map("blog")
@@ -68,7 +68,7 @@ model Project {
   github      String?       @db.VarChar(100)
   gitlab      String?       @db.VarChar(100)
   company     String?       @db.VarChar(100)
-  craetedAt   DateTime      @default(now())
+  createdAt   DateTime      @default(now())
   updatedAt   DateTime      @default(now()) @updatedAt
 
   @@map("project")
@@ -87,7 +87,7 @@ model Education {
   endYear         Int      @db.Int
   major           String?  @db.VarChar(100)
   degree          String?  @db.VarChar(100)
-  craetedAt       DateTime @default(now())
+  createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now()) @updatedAt
 
   @@map("education")
@@ -96,7 +96,7 @@ model Education {
 model SkillCategory {
   id        Int      @id @default(autoincrement())
   title     String   @db.VarChar(100)
-  craetedAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
   Skill     Skill[]
 
@@ -109,7 +109,7 @@ model Skill {
   skillCategoryId Int           @db.Int
   svg             String        @db.Text
   category        SkillCategory @relation(fields: [skillCategoryId], references: [id])
-  craetedAt       DateTime      @default(now())
+  createdAt       DateTime      @default(now())
   updatedAt       DateTime      @default(now()) @updatedAt
 
   @@map("skill")
@@ -123,7 +123,7 @@ model Experience {
   description String    @db.Text
   startDate   DateTime  @db.Date
   endDate     DateTime? @db.Date
-  craetedAt   DateTime  @default(now())
+  createdAt   DateTime  @default(now())
   updatedAt   DateTime  @default(now()) @updatedAt
 
   @@map("experience")
