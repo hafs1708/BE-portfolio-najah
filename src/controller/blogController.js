@@ -3,6 +3,7 @@ import { Validate } from '../application/validate.js';
 import { isID } from '../validation/mainValidation.js';
 import { isBlog, isBlogTitle } from '../validation/blogValidation.js';
 import { ResponseError } from '../error/responseError.js';
+import dayjs from 'dayjs';
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA BLOG
 const getAll = async (req, res, next) => {
@@ -14,8 +15,16 @@ const getAll = async (req, res, next) => {
         const limit = parseInt(req.query.limit) || 10;
 
         // get total data
-        const { data, total } = await getByPage(limit, skip);
+        const { data, total } = await getByPage(page, limit);
         const maxPage = Math.ceil(total / limit);
+
+        // loop array
+        for (const blog of data) {
+            // handle create readble date
+            const date = blog.craetedAt;
+            blog.readDateTime = dayjs(date).format('DD MMM YYYY HH:mm:ss');
+            blog.shortDateTime = dayjs(date).format('D MM YYYY HH:mm');
+        }
 
         res.status(200).json({
             message: "Berhasil mendapatkan semua data blog",

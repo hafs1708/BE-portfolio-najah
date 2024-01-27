@@ -7,6 +7,7 @@ import educationController from "./educationController.js";
 import experienceController from "./experienceController.js";
 import projectController from "./projectController.js";
 import skillController from "./skillController.js";
+import dayjs from 'dayjs';
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA PROFILE
 const get = async (req, res, next) => {
@@ -103,6 +104,15 @@ const portfolio = async (req, res, next) => {
 
         // blog
         const { data: blogs } = await blogController.getByPage(1, 4);
+
+        // hitung jumlah project
+        profile.count_project = projects.length;
+
+        // calculate year of experience
+        const firstProject = projects.findLast(p => true);
+        const firstProjectDate = dayjs(firstProject.startDate);
+        profile.year_of_experience = dayjs().diff(firstProjectDate, "year");
+        profile.month_of_experience = dayjs().diff(firstProjectDate, "month");
 
         res.status(200).json({
             message: "Berhasil ambil data portfolio",

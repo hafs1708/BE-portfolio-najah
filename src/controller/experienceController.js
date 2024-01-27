@@ -91,7 +91,7 @@ const put = async (req, res, next) => {
 
         res.status(200).json({
             message: "Data berhasil disimpan seluruhnya",
-            data: experience
+            data
         });
     } catch (error) {
         next(error)

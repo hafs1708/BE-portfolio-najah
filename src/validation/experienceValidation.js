@@ -1,13 +1,12 @@
 import Joi from "joi";
-import { isString100, isText } from "./mainValidation.js";
 
 const isExperience = Joi.object({
-    company: isString100.required().label("Company Name"),
-    location: isString100.required().label("Location"),
-    title: isString100.required().label("Title"),
-    description: isText.required().label("Description"),
-    startDate: Joi.date().max("now").required().label("Start Date"),
-    endDate: Joi.date().min(Joi.ref("startDate")).max("now").label("End Date")
+    company: Joi.string().min(3).max(100).trim().required(),
+    location: Joi.string().min(3).max(100).trim().required(),
+    title: Joi.string().min(3).max(100).trim().required(),
+    description: Joi.string().min(3).trim().required(),
+    startDate: Joi.date().max("now").required(),
+    endDate: Joi.date().min(Joi.ref("startDate")).max("now").allow(null, "")
 });
 
 export {

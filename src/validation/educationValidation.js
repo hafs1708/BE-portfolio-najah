@@ -5,8 +5,8 @@ const isEducation = Joi.object({
     institutionName: isString100.required().label("Institution Name"),
     startYear: isYear.required().label("Start Year"),
     endYear: isYear,
-    major: isString100,
-    degree: Joi.string().trim().min(2).max(100)
+    major: Joi.string().max(100).trim().allow(""),
+    degree: Joi.string().max(100).trim().allow("")
 });
 
 export {
