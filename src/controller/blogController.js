@@ -5,6 +5,12 @@ import { isBlog, isBlogTitle } from '../validation/blogValidation.js';
 import { ResponseError } from '../error/responseError.js';
 import dayjs from 'dayjs';
 
+const formatData = (blog) => {
+    const date = blog.craetedAt;
+    blog.readDateTime = dayjs(date).format('DD MMM YYYY HH:mm:ss');
+    blog.shortDateTime = dayjs(date).format('D MM YYYY HH:mm');
+}
+
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA BLOG
 const getAll = async (req, res, next) => {
     try {
@@ -19,12 +25,7 @@ const getAll = async (req, res, next) => {
         const maxPage = Math.ceil(total / limit);
 
         // loop array
-        for (const blog of data) {
-            // handle create readble date
-            const date = blog.craetedAt;
-            blog.readDateTime = dayjs(date).format('DD MMM YYYY HH:mm:ss');
-            blog.shortDateTime = dayjs(date).format('D MM YYYY HH:mm');
-        }
+
 
         res.status(200).json({
             message: "Berhasil mendapatkan semua data blog",
@@ -47,6 +48,11 @@ const getByPage = async (page = 1, limit = 10) => {
         take: limit,
         skip: skip
     });
+
+    // format data to get readble date time
+    for (const blog of data) {
+        formatData(blog);
+    }
 
     // get total data
     const total = await Prisma.blog.count();
