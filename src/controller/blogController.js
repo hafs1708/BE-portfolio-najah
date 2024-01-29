@@ -50,6 +50,7 @@ const getByPage = async (page = 1, limit = 10) => {
     });
 
     // format data to get readble date time
+    // lopp data 
     for (const blog of data) {
         formatData(blog);
     }
@@ -78,6 +79,9 @@ const get = async (req, res, next) => {
         // HANDLE NOT FOUND
         if (blog == null) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
+        // tanpa loop data
+        formatData(blog);
+
         res.status(200).json({
             message: "Berhasil mendapatkan data blog berdasarkan id = " + id,
             blog
@@ -98,6 +102,8 @@ const post = async (req, res, next) => {
         const data = await Prisma.blog.create({
             data: blog
         });
+
+        formatData(data);
 
         res.status(200).json({
             message: "Data berhasil disimpan",
@@ -133,6 +139,8 @@ const put = async (req, res, next) => {
             data: blog
         });
 
+        formatData(data);
+
         res.status(200).json({
             message: "Berhasil update data keseluruhan blog",
             data
@@ -166,6 +174,8 @@ const updateTitle = async (req, res, next) => {
             where: { id },
             data: { title }
         });
+
+        formatData(data);
 
         res.status(200).json({
             message: "Data sebagian berhasil diubah",
