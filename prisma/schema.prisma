@@ -53,6 +53,7 @@ model Blog {
   content   String   @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+  photos    Photo[]
 
   @@map("blog")
 }
@@ -70,6 +71,7 @@ model Project {
   company     String?       @db.VarChar(100)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @default(now()) @updatedAt
+  photos      Photo[]
 
   @@map("project")
 }
@@ -127,4 +129,15 @@ model Experience {
   updatedAt   DateTime  @default(now()) @updatedAt
 
   @@map("experience")
+}
+
+model Photo {
+  id        Int      @id @default(autoincrement())
+  path      String   @db.VarChar(255)
+  Blog      Blog?    @relation(fields: [blogId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  blogId    Int?
+  Project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  projectId Int?
+
+  @@map("photo")
 }
