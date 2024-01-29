@@ -1,8 +1,25 @@
+import dayjs from "dayjs";
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
 import { ResponseError } from "../error/responseError.js";
 import { isExperience } from "../validation/experienceValidation.js";
 import { isID } from "../validation/mainValidation.js";
+
+
+const formatData = (experience) => {
+    // Nov 22
+    // Start Date
+    const startDate = experience.startDate;
+    experience.readStartDate = dayjs(startDate).format('MMMM YYYY');
+
+    // End Date
+    if (experience.endDate) {
+        const endDate = experience.endDate;
+        experience.readEndDate = dayjs(endDate).format('MMMM YYYY');
+    } else {
+        experience.readEndDate = 'Present';
+    }
+}
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA BLOG
 const getAll = async (req, res, next) => {
@@ -19,8 +36,16 @@ const getAll = async (req, res, next) => {
     }
 };
 
-const getExperience = async () => {
-    return await Prisma.experience.findMany();
+const getExperience = async (req, res, next) => {
+    const data = await Prisma.experience.findMany({
+        orderBy: { 'startDate': 'desc' }
+    });
+
+    for (const experience of data) {
+        formatData(experience);
+    };
+
+    return data;
 }
 
 //  GET BY ID
@@ -36,6 +61,8 @@ const get = async (req, res, next) => {
 
         // HANDLE NOT FOUND
         if (data == null) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
+
+        formatData(data);
 
         res.status(200).json({
             message: "Berhasil",
@@ -57,6 +84,8 @@ const post = async (req, res, next) => {
         const newExperience = await Prisma.experience.create({
             data
         });
+
+        formatData(newExperience);
 
         res.status(200).json({
             message: "Data berhasil disimpan",
@@ -88,6 +117,8 @@ const put = async (req, res, next) => {
         const data = await Prisma.experience.update({
             where: { id }, data: experience
         });
+
+        formatData(currentExperience);
 
         res.status(200).json({
             message: "Data berhasil disimpan seluruhnya",
