@@ -47,7 +47,10 @@ const getByPage = async (page = 1, limit = 10) => {
 
     const data = await Prisma.blog.findMany({
         take: limit,
-        skip: skip
+        skip: skip,
+        include: {
+            photos: true
+        }
     });
 
     // format data to get readble date time
@@ -74,7 +77,10 @@ const get = async (req, res, next) => {
         id = Validate(isID, id);
 
         const blog = await Prisma.blog.findUnique({
-            where: { id }
+            where: { id },
+            include: {
+                photos: true
+            }
         });
 
         // HANDLE NOT FOUND
@@ -206,7 +212,10 @@ const updateTitle = async (req, res, next) => {
         // EKSEKUSI PATCH
         const data = await Prisma.blog.update({
             where: { id },
-            data: { title }
+            data: { title },
+            include: {
+                photos: true
+            }
         });
 
         formatData(data);
