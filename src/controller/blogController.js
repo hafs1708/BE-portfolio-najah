@@ -4,6 +4,7 @@ import { isID } from '../validation/mainValidation.js';
 import { isBlog, isBlogTitle } from '../validation/blogValidation.js';
 import { ResponseError } from '../error/responseError.js';
 import dayjs from 'dayjs';
+import fileService from '../service/fileService.js';
 
 const formatData = (blog) => {
     const date = blog.craetedAt;
@@ -137,10 +138,16 @@ const post = async (req, res, next) => {
             data
         });
     } catch (error) {
-        next(error);
-    }
+        if (req.files) {
+            // buag file jika error
+            for (const file of req.files) {
+                await fileService.removeFile(file.path)
+            };
+        }
 
-};
+        next(error);
+    };
+}
 
 // PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA blog
 const put = async (req, res, next) => {
