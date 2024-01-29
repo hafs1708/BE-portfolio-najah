@@ -1,8 +1,23 @@
+import dayjs from "dayjs";
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
 import { ResponseError } from "../error/responseError.js";
 import { isID } from "../validation/mainValidation.js";
 import { isProject } from "../validation/projectValidation.js";
+
+const formatData = (project) => {
+    // Start Date
+    const startDate = project.startDate;
+    project.readStartDate = dayjs(startDate).format('DD MMMM YYYY');
+
+    // End Date
+    if (project.endDate) {
+        const endDate = project.endDate;
+        project.readEndDate = dayjs(endDate).format('DD MMMM YYYY');
+    } else {
+        project.readEndDate = 'Present';
+    }
+}
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA project
 const getAll = async (req, res, next) => {
@@ -15,7 +30,7 @@ const getAll = async (req, res, next) => {
 
 
         // get total data
-        const { data, total } = await getByPage(limit, skip);
+        const { data, total } = await getByPage(page, limit)
         const maxPage = Math.ceil(total / limit);
 
         res.status(200).json({
@@ -32,7 +47,7 @@ const getAll = async (req, res, next) => {
     }
 };
 
-const getByPage = async (page = 1, limit = 10) => {
+const getByPage = async (page, limit) => {
     // SKIP
     const skip = (page - 1) * limit;
 
@@ -40,6 +55,10 @@ const getByPage = async (page = 1, limit = 10) => {
         take: limit,
         skip: skip
     });
+
+    for (const project of data) {
+        formatData(project);
+    }
 
     // get total data
     const total = await Prisma.project.count();
@@ -63,6 +82,8 @@ const get = async (req, res, next) => {
         // HANDLE NOT FOUND
         if (data == null) throw new ResponseError(404, `Project dengan ${id} tidak ditemukan`);
 
+        formatData(data);
+
         res.status(200).json({
             message: "Berhasil mendapat data project berdasarkan id",
             data
@@ -84,6 +105,8 @@ const post = async (req, res, next) => {
         const data = await Prisma.project.create({
             data: project
         });
+
+        formatData(data);
 
         res.status(200).json({
             message: "Berhasil Menyimpan Data Project",
@@ -117,6 +140,8 @@ const put = async (req, res, next) => {
             where: { id },
             data: project
         });
+
+        formatData(currentProject);
 
         res.status(200).json({
             message: "Berhasil update data keseluruhan project",

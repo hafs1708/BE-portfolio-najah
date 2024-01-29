@@ -1,8 +1,24 @@
+import dayjs from "dayjs";
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
 import { ResponseError } from "../error/responseError.js";
 import { isEducation } from "../validation/educationValidation.js";
 import { isID } from "../validation/mainValidation.js";
+
+const formatData = (education) => {
+    // Nov 22
+    // Start Date
+    const startYear = education.startDate;
+    education.readStartYear = dayjs(startYear).format('YYYY');
+
+    // End Date
+    if (education.endYear) {
+        const endYear = education.endYear;
+        education.readEndYear = dayjs(endYear).format('YYYY');
+    } else {
+        education.readEndYear = 'Present';
+    }
+}
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA BLOG
 const getAll = async (req, res, next) => {
@@ -20,9 +36,15 @@ const getAll = async (req, res, next) => {
 };
 
 const getEducation = async () => {
-    return await Prisma.education.findMany({
+    const data = await Prisma.education.findMany({
         orderBy: { 'startYear': 'desc' }
     });
+
+    for (const education of data) {
+        formatData(education);
+    };
+
+    return data;
 }
 
 //  GET BY ID
@@ -38,6 +60,8 @@ const get = async (req, res, next) => {
 
         // HANDLE NOT FOUND
         if (education == null) throw new ResponseError(404, `Education dengan ${id} tidak ditemukan`);
+
+        formatData(education);
 
         res.status(200).json({
             message: "Berhasil"
@@ -58,6 +82,8 @@ const post = async (req, res, next) => {
         const data = await Prisma.education.create({
             data: education
         });
+
+        formatData(data);
 
         res.status(200).json({
             message: "Data berhasil disimpan",
@@ -89,6 +115,8 @@ const put = async (req, res, next) => {
         const data = await Prisma.education.update({
             where: { id }, data
         });
+
+        formatData(data);
 
         res.status(200).json({
             message: "Data berhasil disimpan seluruhnya"
