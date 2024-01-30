@@ -4,6 +4,7 @@ import { Validate } from "../application/validate.js";
 import { ResponseError } from "../error/responseError.js";
 import { isID } from "../validation/mainValidation.js";
 import { isProject } from "../validation/projectValidation.js";
+import fileService from "../service/fileService.js";
 
 const formatData = (project) => {
     // Start Date
@@ -97,13 +98,24 @@ const get = async (req, res, next) => {
 // PATH: METHOD POST UNTUK MENYIMPAN DATA project
 const post = async (req, res, next) => {
     try {
+        // untuk mengumpulkan photo path
+        const photos = fileService.getUploadPhotos(req);
+
         let project = req.body;
 
         // START JOI VALIDATE
         project = Validate(isProject, project);
 
         const data = await Prisma.project.create({
-            data: project
+            data: {
+                ...project, // duplicate object
+                photos: {
+                    create: photos
+                }
+            },
+            include: {
+                photos: true
+            }
         });
 
         formatData(data);
@@ -113,6 +125,13 @@ const post = async (req, res, next) => {
             data
         });
     } catch (error) {
+        if (req.files) {
+            // buang file jika error
+            for (const file of req.files) {
+                await fileService.removeFile(file.path)
+            };
+        }
+
         next(error);
     }
 };
