@@ -98,26 +98,31 @@ const get = async (req, res, next) => {
     }
 };
 
+const getUploadPhotos = (req) => {
+    const photos = [];
+    if (req.files) {
+        // loop photos
+        for (const file of req.files) {
+            // add slash to photo
+            let photo = '/' + file.path.replaceAll("\\", "/");
+
+            // buat object photo berdasarkan schema photo
+            photo = {
+                path: photo
+            };
+
+            // push to photos
+            photos.push(photo);
+        }
+    }
+    return photos;
+}
+
 // PATH: METHOD POST UNTUK MENYIMPAN DATA BLOG
 const post = async (req, res, next) => {
     try {
-        // untuk mengumpulkan photo
-        const photos = [];
-        if (req.files) {
-            // loop photos
-            for (const file of req.files) {
-                // add slash to photo
-                let photo = '/' + file.path.replaceAll("\\", "/");
-
-                // buat object photo berdasarkan schema photo
-                photo = {
-                    path: photo
-                };
-
-                // push to photos
-                photos.push(photo);
-            }
-        }
+        // untuk mengumpulkan photo path
+        const photos = getUploadPhotos(req);
 
         let blog = req.body;
 
@@ -187,11 +192,8 @@ const put = async (req, res, next) => {
         // hapus variable photo
         delete blog.photos
 
-        console.log("id yang di pertahankan ===============");
-        console.log(keepsPhoto);
-
-        console.log("data blog yang mau disimpan ==============");
-        console.log(blog);
+        // simpan foto baru
+        const newPhotos = getUploadPhotos(req);
 
         // update blog + delete photo yang tidak dipertahankan
         const data = await Prisma.blog.update({
@@ -203,7 +205,8 @@ const put = async (req, res, next) => {
                         id: {
                             notIn: keepsPhoto // delete yang tidak dipertahankan
                         }
-                    }
+                    },
+                    create: newPhotos // add new photo
                 }
             },
             include: {
