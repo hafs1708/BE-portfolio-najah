@@ -50,7 +50,8 @@ const getByPage = async (page = 1, limit = 10) => {
         skip: skip,
         include: {
             photos: true
-        }
+        },
+        orderBy: { createdAt: 'desc' }
     });
 
     // format data to get readble date time
@@ -98,28 +99,9 @@ const get = async (req, res, next) => {
     }
 };
 
-const getUploadPhotos = (req) => {
-    const photos = [];
-    if (req.files) {
-        // loop photos
-        for (const file of req.files) {
-            // add slash to photo
-            let photo = '/' + file.path.replaceAll("\\", "/");
-
-            // buat object photo berdasarkan schema photo
-            photo = {
-                path: photo
-            };
-
-            // push to photos
-            photos.push(photo);
-        }
-    }
-    return photos;
-}
-
 // PATH: METHOD POST UNTUK MENYIMPAN DATA BLOG
 const post = async (req, res, next) => {
+    console.log("masuk method post")
     try {
         // untuk mengumpulkan photo path
         const photos = getUploadPhotos(req);
@@ -149,8 +131,9 @@ const post = async (req, res, next) => {
             data
         });
     } catch (error) {
+        console.log(error);
         if (req.files) {
-            // buag file jika error
+            // buang file jika error
             for (const file of req.files) {
                 await fileService.removeFile(file.path)
             };
@@ -193,7 +176,7 @@ const put = async (req, res, next) => {
         delete blog.photos
 
         // simpan foto baru
-        const newPhotos = getUploadPhotos(req);
+        const newPhotos = fileService.getUploadPhotos(req);
 
         // update blog + delete photo yang tidak dipertahankan
         const data = await Prisma.blog.update({
