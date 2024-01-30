@@ -169,14 +169,46 @@ const put = async (req, res, next) => {
 
         const currentBlog = await Prisma.blog.findUnique({
             where: { id },
-            select: { id: true }
+            include: {
+                photos: true
+            }
         });
 
         if (!currentBlog) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
+        // kumpulkan id photo yg existing
+        const currentPhotos = currentBlog.photos.map(photo => photo.id);
+        const idYangDipertahankan = blog.photos || []; // default array kosong
+
+        // filter foto yg di pertahankan
+        // current photos di filter berdasarkan id yang dipertahankan 
+        const keepsPhoto = currentPhotos.filter(idPhoto => idYangDipertahankan.includes(idPhoto));
+
+        // hapus variable photo
+        delete blog.photos
+
+        console.log("id yang di pertahankan ===============");
+        console.log(keepsPhoto);
+
+        console.log("data blog yang mau disimpan ==============");
+        console.log(blog);
+
+        // update blog + delete photo yang tidak dipertahankan
         const data = await Prisma.blog.update({
             where: { id },
-            data: blog
+            data: {
+                ...blog, // duplicate blog
+                photos: {
+                    deleteMany: {
+                        id: {
+                            notIn: keepsPhoto // delete yang tidak dipertahankan
+                        }
+                    }
+                }
+            },
+            include: {
+                photos: true
+            }
         });
 
         formatData(data);
@@ -186,6 +218,13 @@ const put = async (req, res, next) => {
             data
         });
     } catch (error) {
+        if (req.files) {
+            // buang file jika error
+            for (const file of req.files) {
+                await fileService.removeFile(file.path)
+            };
+        }
+
         next(error);
     }
 };
