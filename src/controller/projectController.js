@@ -150,14 +150,43 @@ const put = async (req, res, next) => {
 
         const currentProject = await Prisma.project.findUnique({
             where: { id },
-            select: { id: true }
+            include: {
+                photos: true
+            }
         });
 
         if (!currentProject) throw new ResponseError(404, `Project dengan ${id} tidak ditemukan`);
 
+        // kumpulkan id photo yg existing
+        const currentPhotos = currentProject.photos.map(photo => photo.id);
+        const idYangDipertahankan = project.photos || []; // default array kosong
+
+        // filter foto yg di pertahankan
+        // current photos di filter berdasarkan id yang dipertahankan 
+        const keepsPhoto = currentPhotos.filter(idPhoto => idYangDipertahankan.includes(idPhoto));
+
+        // hapus variable photo
+        delete project.photos
+
+        // simpan foto baru
+        const newPhotos = fileService.getUploadPhotos(req);
+
         const data = await Prisma.project.update({
             where: { id },
-            data: project
+            data: {
+                ...project, // duplicate blog
+                photos: {
+                    deleteMany: {
+                        id: {
+                            notIn: keepsPhoto // delete yang tidak dipertahankan
+                        }
+                    },
+                    create: newPhotos // add new photo
+                }
+            },
+            include: {
+                photos: true
+            }
         });
 
         formatData(currentProject);
@@ -167,6 +196,13 @@ const put = async (req, res, next) => {
             data
         });
     } catch (error) {
+        if (req.files) {
+            // buang file jika error
+            for (const file of req.files) {
+                await fileService.removeFile(file.path)
+            };
+        }
+
         next(error);
     }
 };

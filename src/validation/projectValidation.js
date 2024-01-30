@@ -10,7 +10,8 @@ const isProject = Joi.object({
     url: isURI,
     github: isURI,
     gitlab: isURI,
-    company: isString100
+    company: isString100,
+    photos: Joi.array().items(Joi.number()) // kumpulan id (1, 2, 3)
 });
 
 export {
