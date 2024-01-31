@@ -59,19 +59,20 @@ model Blog {
 }
 
 model Project {
-  id          Int           @id @default(autoincrement())
-  title       String        @db.VarChar(255)
-  description String        @db.Text
-  startDate   DateTime      @db.Date
-  endtDate    DateTime?     @db.Date
-  status      ProjectStatus @default(ON_PROGRESS)
-  url         String?       @db.VarChar(100)
-  github      String?       @db.VarChar(100)
-  gitlab      String?       @db.VarChar(100)
-  company     String?       @db.VarChar(100)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @default(now()) @updatedAt
+  id          Int            @id @default(autoincrement())
+  title       String         @db.VarChar(255)
+  description String         @db.Text
+  startDate   DateTime       @db.Date
+  endtDate    DateTime?      @db.Date
+  status      ProjectStatus  @default(ON_PROGRESS)
+  url         String?        @db.VarChar(100)
+  github      String?        @db.VarChar(100)
+  gitlab      String?        @db.VarChar(100)
+  company     String?        @db.VarChar(100)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @default(now()) @updatedAt
   photos      Photo[]
+  skills      ProjectSkill[]
 
   @@map("project")
 }
@@ -106,13 +107,14 @@ model SkillCategory {
 }
 
 model Skill {
-  id              Int           @id @default(autoincrement())
-  title           String        @db.VarChar(100)
-  skillCategoryId Int           @db.Int
-  svg             String        @db.Text
-  category        SkillCategory @relation(fields: [skillCategoryId], references: [id])
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @default(now()) @updatedAt
+  id              Int            @id @default(autoincrement())
+  title           String         @db.VarChar(100)
+  skillCategoryId Int            @db.Int
+  svg             String         @db.Text
+  category        SkillCategory  @relation(fields: [skillCategoryId], references: [id])
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @default(now()) @updatedAt
+  projects        ProjectSkill[]
 
   @@map("skill")
 }
@@ -131,6 +133,10 @@ model Experience {
   @@map("experience")
 }
 
+// one to many relation
+// project => photo
+// blog => photo
+
 model Photo {
   id        Int      @id @default(autoincrement())
   path      String   @db.VarChar(255)
@@ -140,4 +146,15 @@ model Photo {
   projectId Int?
 
   @@map("photo")
+}
+
+// skill yang ada di dalam project
+model ProjectSkill {
+  Skill     Skill?   @relation(fields: [skillId], references: [id])
+  skillId   Int
+  Project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId Int
+
+  @@id([skillId, projectId])
+  @@map("projectskill")
 }
