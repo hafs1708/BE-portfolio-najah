@@ -54,7 +54,10 @@ const getByPage = async (page, limit) => {
 
     const data = await Prisma.project.findMany({
         take: limit,
-        skip: skip
+        skip: skip,
+        include: {
+            photos: true
+        }
     });
 
     for (const project of data) {
@@ -77,7 +80,10 @@ const get = async (req, res, next) => {
         id = Validate(isID, id);
 
         const data = await Prisma.project.findUnique({
-            where: { id }
+            where: { id },
+            include: {
+                photos: true
+            }
         });
 
         // HANDLE NOT FOUND
