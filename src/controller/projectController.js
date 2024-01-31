@@ -57,6 +57,9 @@ const getByPage = async (page, limit) => {
         skip: skip,
         include: {
             photos: true
+        },
+        orderBy: {
+            startDate: 'desc'
         }
     });
 
