@@ -56,7 +56,12 @@ const getByPage = async (page, limit) => {
         take: limit,
         skip: skip,
         include: {
-            photos: true
+            photos: true,
+            skills: {
+                include: {
+                    Skill: true
+                }
+            }
         },
         orderBy: {
             startDate: 'desc'
@@ -86,7 +91,11 @@ const get = async (req, res, next) => {
             where: { id },
             include: {
                 photos: true,
-                skills: true
+                skills: {
+                    include: {
+                        Skill: true
+                    }
+                }
             }
         });
 
