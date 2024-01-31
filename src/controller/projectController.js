@@ -18,6 +18,12 @@ const formatData = (project) => {
     } else {
         project.readEndDate = 'Present';
     }
+
+    // buat penghubung relasi, karena many to many 
+    const skills = project.skills.map(projectSkill => {
+        return projectSkill.Skill
+    });
+    project.skills = skills
 }
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA project
