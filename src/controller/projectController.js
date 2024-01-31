@@ -85,7 +85,8 @@ const get = async (req, res, next) => {
         const data = await Prisma.project.findUnique({
             where: { id },
             include: {
-                photos: true
+                photos: true,
+                skills: true
             }
         });
 
@@ -177,7 +178,8 @@ const put = async (req, res, next) => {
         const currentProject = await Prisma.project.findUnique({
             where: { id },
             include: {
-                photos: true
+                photos: true,
+                skills: true
             }
         });
 
@@ -211,7 +213,8 @@ const put = async (req, res, next) => {
                 }
             },
             include: {
-                photos: true
+                photos: true,
+                skills: true
             }
         });
 
