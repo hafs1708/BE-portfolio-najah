@@ -11,7 +11,8 @@ const isProject = Joi.object({
     github: isURI,
     gitlab: isURI,
     company: isString100,
-    photos: Joi.array().items(Joi.number()) // kumpulan id (1, 2, 3)
+    photos: Joi.array().items(Joi.number()), // kumpulan id (1, 2, 3)
+    skills: Joi.array().items(Joi.number()) // kumpulan id (1, 2, 3)
 });
 
 export {

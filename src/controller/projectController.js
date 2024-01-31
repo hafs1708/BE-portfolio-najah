@@ -115,15 +115,32 @@ const post = async (req, res, next) => {
         // START JOI VALIDATE
         project = Validate(isProject, project);
 
+        console.log("project =================");
+        console.log(project);
+
+        const skills = project.skills.map(s => {
+            return {
+                skillId: s
+            }
+        });
+
+        // throw new Error("test error");
+
         const data = await Prisma.project.create({
             data: {
                 ...project, // duplicate object
                 photos: {
                     create: photos
+                },
+                skills: {
+                    createMany: {
+                        data: skills
+                    }
                 }
             },
             include: {
-                photos: true
+                photos: true,
+                skills: true
             }
         });
 
