@@ -156,7 +156,11 @@ const post = async (req, res, next) => {
             },
             include: {
                 photos: true,
-                skills: true
+                skills: {
+                    include: {
+                        Skill: true
+                    }
+                }
             }
         });
 
@@ -194,7 +198,11 @@ const put = async (req, res, next) => {
             where: { id },
             include: {
                 photos: true,
-                skills: true
+                skills: {
+                    include: {
+                        Skill: true
+                    }
+                }
             }
         });
 
@@ -214,6 +222,15 @@ const put = async (req, res, next) => {
         // simpan foto baru
         const newPhotos = fileService.getUploadPhotos(req);
 
+        const skills = project.skills.map(s => {
+            return {
+                skillId: s
+            }
+        });
+
+        // delete skill from data update
+        delete project.skills;
+
         const data = await Prisma.project.update({
             where: { id },
             data: {
@@ -225,11 +242,21 @@ const put = async (req, res, next) => {
                         }
                     },
                     create: newPhotos // add new photo
+                },
+                skills: {
+                    deleteMany: {}, // clear data relasi
+                    createMany: {
+                        data: skills // simpan ulang, data hasil mapping
+                    }
                 }
             },
             include: {
                 photos: true,
-                skills: true
+                skills: {
+                    include: {
+                        Skill: true
+                    }
+                }
             }
         });
 
