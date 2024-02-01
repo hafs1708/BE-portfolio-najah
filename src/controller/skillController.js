@@ -12,10 +12,7 @@ const getAll = async (req, res) => {
             category: true
         }
     })
-    res.status(200).json({
-        message: "Berhasil mendapat data skill",
-        data
-    });
+    res.status(200).json(data);
 };
 
 // GET SKILL BY CATEGORY
@@ -24,10 +21,7 @@ const getSkillByCategory = async (req, res, next) => {
         // eksekusi proses ambil data
         const data = await handleSkillByCategory();
 
-        res.status(200).json({
-            message: "Berhasil mengambil skill berdasarkan category",
-            data
-        })
+        res.status(200).json(data);
     } catch (error) {
         next(error);
     }
@@ -60,10 +54,7 @@ const get = async (req, res, next) => {
         // HANDLE NOT FOUND
         if (data == null) throw new ResponseError(404, `Skill dengan ${id} tidak ditemukan`);
 
-        res.status(200).json({
-            message: "Berhasil mendapat data skill",
-            data
-        });
+        res.status(200).json(data);
     } catch (error) {
         next(error)
     }

@@ -37,11 +37,7 @@ const login = async (req, res, next) => {
         // UPDATE DATA USER, Masukkan ke token
         const data = await authService.updatedUserData(email, token);
 
-        res.status(200).json({
-            message: "Anda berhasil login",
-            data,
-            token
-        });
+        res.status(200).json(data);
     } catch (error) {
         next(error)
     }

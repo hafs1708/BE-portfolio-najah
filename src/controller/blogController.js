@@ -29,7 +29,6 @@ const getAll = async (req, res, next) => {
 
 
         res.status(200).json({
-            message: "Berhasil mendapatkan semua data blog",
             data,
             page,
             total,
@@ -90,10 +89,7 @@ const get = async (req, res, next) => {
         // tanpa loop data
         formatData(blog);
 
-        res.status(200).json({
-            message: "Berhasil mendapatkan data blog berdasarkan id = " + id,
-            blog
-        });
+        res.status(200).json(blog);
     } catch (error) {
         next(error);
     }
@@ -138,7 +134,6 @@ const post = async (req, res, next) => {
                 await fileService.removeFile(file.path)
             };
         }
-
         next(error);
     };
 }

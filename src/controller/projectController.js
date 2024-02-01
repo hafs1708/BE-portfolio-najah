@@ -41,14 +41,12 @@ const getAll = async (req, res, next) => {
         const maxPage = Math.ceil(total / limit);
 
         res.status(200).json({
-            message: "Berhasil mendapat data project keseluruhan",
             data,
             total,
             page,
             limit,
             maxPage
         });
-
     } catch (error) {
         next(error);
     }
@@ -110,11 +108,7 @@ const get = async (req, res, next) => {
 
         formatData(data);
 
-        res.status(200).json({
-            message: "Berhasil mendapat data project berdasarkan id",
-            data
-        });
-
+        res.status(200).json(data);
     } catch (error) {
         next(error)
     }
@@ -166,10 +160,7 @@ const post = async (req, res, next) => {
 
         formatData(data);
 
-        res.status(200).json({
-            message: "Berhasil Menyimpan Data Project",
-            data
-        });
+        res.status(200).json(data);
     } catch (error) {
         if (req.files) {
             // buang file jika error
@@ -177,7 +168,6 @@ const post = async (req, res, next) => {
                 await fileService.removeFile(file.path)
             };
         }
-
         next(error);
     }
 };
@@ -244,7 +234,7 @@ const put = async (req, res, next) => {
                     create: newPhotos // add new photo
                 },
                 skills: {
-                    deleteMany: {}, // clear data relasi
+                    deleteMany: {}, // clear data
                     createMany: {
                         data: skills // simpan ulang, data hasil mapping
                     }

@@ -26,10 +26,7 @@ const getAll = async (req, res, next) => {
         // FIND MANY -> ambil semua blog
         const data = await getEducation();
 
-        res.status(200).json({
-            message: "Berhasil mendapatkan semua data education",
-            data
-        });
+        res.status(200).json(data);
     } catch (error) {
         next(error);
     }
@@ -63,9 +60,7 @@ const get = async (req, res, next) => {
 
         formatData(education);
 
-        res.status(200).json({
-            message: "Berhasil"
-        });
+        res.status(200).json(education);
     } catch (error) {
         next(error)
     }

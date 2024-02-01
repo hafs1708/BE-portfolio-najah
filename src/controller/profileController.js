@@ -15,10 +15,7 @@ const get = async (req, res, next) => {
         const data = await getProfile();
 
         // KALO ADA ISINYA => KIRIM DATA ASLI
-        res.status(200).json({
-            message: "Berhasil ambil data profile",
-            data
-        });
+        res.status(200).json(data);
 
     } catch (error) {
         next(error);
@@ -115,18 +112,13 @@ const portfolio = async (req, res, next) => {
         profile.month_of_experience = dayjs().diff(firstProjectDate, "month");
 
         res.status(200).json({
-            message: "Berhasil ambil data portfolio",
-            data: {
-                profile,
-                projects,
-                experiences,
-                educations,
-                skills,
-                blogs
-            }
-
-        })
-
+            profile,
+            projects,
+            educations,
+            experiences,
+            skills,
+            blogs
+        });
     } catch (error) {
         next(error);
     }
