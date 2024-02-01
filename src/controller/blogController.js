@@ -163,6 +163,7 @@ const put = async (req, res, next) => {
         // filter foto yg di pertahankan
         // current photos di filter berdasarkan id yang dipertahankan 
         const keepsPhoto = currentPhotos.filter(idPhoto => idYangDipertahankan.includes(idPhoto));
+        const photo_to_be_remove = currentBlog.photos.filter(photo => !idYangDipertahankan.includes(photo.id))
 
         // hapus variable photo
         delete blog.photos
@@ -188,6 +189,11 @@ const put = async (req, res, next) => {
                 photos: true
             }
         });
+
+        // remove unuse photo
+        for (const photo of photo_to_be_remove) {
+            await fileService.removeFile(photo.path)
+        };
 
         formatData(data);
 
@@ -249,15 +255,23 @@ const remove = async (req, res, next) => {
 
         const currentBlog = await Prisma.blog.findUnique({
             where: { id },
-            select: { id: true }
+            include: {
+                photos: true
+            }
         });
 
         if (!currentBlog) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
         // EKSEKUSI DELETE
         await Prisma.blog.delete({
-            where: { id }
+            where: { id },
+
         });
+
+        // remove foto
+        for (const photo of currentBlog.photos) {
+            await fileService.removeFile(photo.path)
+        };
 
         res.status(200).json({
             message: "SUCCESS"
