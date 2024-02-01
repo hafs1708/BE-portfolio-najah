@@ -163,6 +163,7 @@ const put = async (req, res, next) => {
         // filter foto yg di pertahankan
         // current photos di filter berdasarkan id yang dipertahankan 
         const keepsPhoto = currentPhotos.filter(idPhoto => idYangDipertahankan.includes(idPhoto));
+        // collect photo to be remove
         const photo_to_be_remove = currentBlog.photos.filter(photo => !idYangDipertahankan.includes(photo.id))
 
         // hapus variable photo

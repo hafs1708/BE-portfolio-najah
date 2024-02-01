@@ -205,6 +205,8 @@ const put = async (req, res, next) => {
         // filter foto yg di pertahankan
         // current photos di filter berdasarkan id yang dipertahankan 
         const keepsPhoto = currentPhotos.filter(idPhoto => idYangDipertahankan.includes(idPhoto));
+        // collect photo to be remove
+        const photo_to_be_remove = currentProject.photos.filter(photo => !idYangDipertahankan.includes(photo.id))
 
         // hapus variable photo
         delete project.photos
@@ -249,6 +251,11 @@ const put = async (req, res, next) => {
                 }
             }
         });
+
+        // remove unuse photo
+        for (const photo of photo_to_be_remove) {
+            await fileService.removeFile(photo.path)
+        };
 
         formatData(currentProject);
 
