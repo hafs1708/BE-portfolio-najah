@@ -100,7 +100,7 @@ const post = async (req, res, next) => {
     console.log("masuk method post")
     try {
         // untuk mengumpulkan photo path
-        const photos = getUploadPhotos(req);
+        const photos = fileService.getUploadPhotos(req);
 
         let blog = req.body;
 
@@ -122,10 +122,7 @@ const post = async (req, res, next) => {
 
         formatData(data);
 
-        res.status(200).json({
-            message: "Data berhasil disimpan",
-            data
-        });
+        res.status(200).json(data);
     } catch (error) {
         console.log(error);
         if (req.files) {
@@ -194,10 +191,7 @@ const put = async (req, res, next) => {
 
         formatData(data);
 
-        res.status(200).json({
-            message: "Berhasil update data keseluruhan blog",
-            data
-        });
+        res.status(200).json(data);
     } catch (error) {
         if (req.files) {
             // buang file jika error
@@ -205,7 +199,6 @@ const put = async (req, res, next) => {
                 await fileService.removeFile(file.path)
             };
         }
-
         next(error);
     }
 };
@@ -240,10 +233,7 @@ const updateTitle = async (req, res, next) => {
 
         formatData(data);
 
-        res.status(200).json({
-            message: "Data sebagian berhasil diubah",
-            data
-        });
+        res.status(200).json(data);
     } catch (error) {
         next(error);
     }
@@ -270,7 +260,7 @@ const remove = async (req, res, next) => {
         });
 
         res.status(200).json({
-            message: "Data berhasil dihapus"
+            message: "SUCCESS"
         });
     } catch (error) {
         next(error);

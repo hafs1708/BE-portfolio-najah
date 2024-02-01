@@ -80,10 +80,7 @@ const post = async (req, res, next) => {
 
         formatData(data);
 
-        res.status(200).json({
-            message: "Data berhasil disimpan",
-            data
-        });
+        res.status(200).json(data);
     } catch (error) {
         next(error)
     }
@@ -113,9 +110,7 @@ const put = async (req, res, next) => {
 
         formatData(data);
 
-        res.status(200).json({
-            message: "Data berhasil disimpan seluruhnya"
-        });
+        res.status(200).json(data);
     } catch (error) {
         next(error)
     }
@@ -154,7 +149,7 @@ const remove = async (req, res, next) => {
         });
 
         res.status(200).json({
-            message: "Data berhasil dihapus"
+            message: "SUCCESS"
         });
     } catch (error) {
         next(error)

@@ -65,10 +65,7 @@ const put = async (req, res, next) => {
             }
         }
 
-        res.status(200).json({
-            message: "Data berhasil disimpan seluruhnya",
-            data: dataProfile
-        });
+        res.status(200).json({ data: dataProfile });
     } catch (error) {
         // jika error && ada file, maka file di hapus
         console.log("handle error")

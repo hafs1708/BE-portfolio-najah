@@ -252,10 +252,7 @@ const put = async (req, res, next) => {
 
         formatData(currentProject);
 
-        res.status(200).json({
-            message: "Berhasil update data keseluruhan project",
-            data
-        });
+        res.status(200).json(data);
     } catch (error) {
         if (req.files) {
             // buang file jika error
@@ -290,7 +287,7 @@ const remove = async (req, res, next) => {
         })
 
         res.status(200).json({
-            message: "Data berhasil dihapus"
+            message: "SUCCESS"
         });
     } catch (error) {
         next(error);
