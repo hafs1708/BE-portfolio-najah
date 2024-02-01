@@ -214,11 +214,15 @@ const put = async (req, res, next) => {
         // simpan foto baru
         const newPhotos = fileService.getUploadPhotos(req);
 
-        const skills = project.skills.map(s => {
-            return {
-                skillId: s
-            }
-        });
+        // present error
+        let skills = [];
+        if (project.skills) {
+            skills = project.skills.map(s => {
+                return {
+                    skillId: s
+                }
+            });
+        }
 
         // delete skill from data update
         delete project.skills;
