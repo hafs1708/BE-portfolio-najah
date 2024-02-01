@@ -286,7 +286,9 @@ const remove = async (req, res, next) => {
 
         const currentProject = await Prisma.project.findUnique({
             where: { id },
-            select: { id: true }
+            include: {
+                photos: true
+            }
         });
 
         // Check Current
@@ -295,7 +297,12 @@ const remove = async (req, res, next) => {
         // EKSEKUSI DELETE
         await Prisma.project.delete({
             where: { id }
-        })
+        });
+
+        // remove foto
+        for (const photo of currentProject.photos) {
+            await fileService.removeFile(photo.path)
+        };
 
         res.status(200).json({
             message: "SUCCESS"
