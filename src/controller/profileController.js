@@ -103,10 +103,16 @@ const portfolio = async (req, res, next) => {
         profile.count_project = projects.length;
 
         // calculate year of experience
-        const firstProject = projects.findLast(p => true);
-        const firstProjectDate = dayjs(firstProject.startDate);
-        profile.year_of_experience = dayjs().diff(firstProjectDate, "year");
-        profile.month_of_experience = dayjs().diff(firstProjectDate, "month");
+        if (projects.length) {
+            const firstProject = projects.findLast(p => true);
+            const firstProjectDate = dayjs(firstProject.startDate);
+            profile.year_of_experience = dayjs().diff(firstProjectDate, "year");
+            profile.month_of_experience = dayjs().diff(firstProjectDate, "month");
+        } else {
+            // default
+            profile.year_of_experience = 0;
+            profile.month_of_experience = 0;
+        }
 
         res.status(200).json({
             profile,
