@@ -17,7 +17,13 @@ const createToken = (email, res, age = process.env.SESSION_AGE) => {
     });
 
     // CARA UNTUK KIRIM COOKIE KE CLIENT/BROWSER
-    res.cookie("token", token);
+    const maxAge = 24 * 60 * 60 * 1000;
+    let cookieConfig = {
+        httpOnly: true,
+        maxAge: maxAge
+    }
+    res.cookie("token", token, cookieConfig);
+
     return token;
 }
 
