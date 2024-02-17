@@ -5,9 +5,10 @@ dotenv.config();
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
 import { ResponseError } from "../error/responseError.js";
-import { loginValidation } from "../validation/authValidation.js";
+import { loginValidation, updateUserValidation } from "../validation/authValidation.js";
 import bycrpt from 'bcrypt';
 import authService from "../service/authService.js";
+import Joi from 'joi';
 
 // PATH: METHOD POST UNTUK LOGIN
 const login = async (req, res, next) => {
@@ -90,8 +91,45 @@ const get = async (req, res, next) => {
     }
 }
 
+const put = async (req, res, next) => {
+    try {
+        let data = req.body;
+        console.log(data);
+
+        // validate
+        data = Validate(updateUserValidation, data)
+
+        // check new password & confirm password
+        // remove confirm_password
+        delete data.confirm_password;
+
+        // updated password to hash
+        data.password = await bycrpt.hash(data.password, 19)
+
+        // check current password
+        // get current user
+        const currentUser = await Prisma.$connect.user.findFirstOrThrow();
+
+        const updatedUser = await Prisma.user.findFirst({
+            where: { email: currentUser.email },
+            data,
+            select: {
+                name: true,
+                email: true
+            }
+        });
+
+        res.status(200).json(updatedUser);
+
+        // <- apakah valuenya sama atau tidak
+    } catch (error) {
+        next(error)
+    }
+}
+
 export default {
     login,
     logout,
-    get
+    get,
+    put
 }

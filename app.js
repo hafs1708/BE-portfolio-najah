@@ -20,7 +20,6 @@ import { errorMiddleware } from './src/middleware/errorMiddleware.js';
 import { routerPublic } from './src/router/publicRouter.js';
 import { authMiddleware } from './src/middleware/authMiddleware.js';
 import fileService from './src/service/fileService.js';
-import { access } from 'fs';
 
 // deklarasi aplikasi express
 const app = express();

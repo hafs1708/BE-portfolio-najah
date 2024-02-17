@@ -7,3 +7,6 @@ routerAuth.delete('/logout', authController.logout);
 
 // get user
 routerAuth.get('/user', authController.get);
+
+// update user -> name & password
+routerAuth.put('/user', authController.put);
