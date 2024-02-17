@@ -104,13 +104,13 @@ const put = async (req, res, next) => {
         delete data.confirm_password;
 
         // updated password to hash
-        data.password = await bycrpt.hash(data.password, 19)
+        data.password = await bycrpt.hash(data.password, 10)
 
         // check current password
         // get current user
-        const currentUser = await Prisma.$connect.user.findFirstOrThrow();
+        const currentUser = await Prisma.user.findFirstOrThrow();
 
-        const updatedUser = await Prisma.user.findFirst({
+        const updatedUser = await Prisma.user.update({
             where: { email: currentUser.email },
             data,
             select: {
