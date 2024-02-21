@@ -1,7 +1,7 @@
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
 import fileService from "../service/fileService.js";
-import { isProfile } from "../validation/profileValidation.js";
+import { isCreateProfile, isUpdateProfile } from "../validation/profileValidation.js";
 import blogController from "./blogController.js";
 import educationController from "./educationController.js";
 import experienceController from "./experienceController.js";
@@ -38,18 +38,23 @@ const put = async (req, res, next) => {
             data.avatar = avatar;
         }
 
-        // validasi
-        data = Validate(isProfile, data)
-
         let dataProfile = {};
-        if (!dataProfile) {
+        if (profile == null) {
             // JIKA NULL, MAKA BUAT DATA BARU - CERATE
-            dataProfile = await Prisma.profile.create({
+            // Validasi
+            data = Validate(isCreateProfile, data);
+
+            dataProfile = await Prisma.profile.update({
+                where: {
+                    email: profile.email
+                },
                 data
             });
 
         } else {
             // JIKA ADA ISINYA, UPDATE DATA TERSEBUT - UPDATE
+            data = Validate(isUpdateProfile, data)
+
             dataProfile = await Prisma.profile.update({
                 where: { email: profile.email },
                 data
