@@ -146,7 +146,17 @@ const getProfile = async () => {
             address: "-",
             job: "-",
             city: "-",
-            country: "-"
+            country: "-",
+            avatar: null,
+            bio: null,
+            website: null,
+            github: null,
+            gitlab: null,
+            instagram: null,
+            facebook: null,
+            twitter: null,
+            linkedin: null,
+            discord: null
         };
     }
     return profile;
