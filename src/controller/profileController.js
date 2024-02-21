@@ -142,7 +142,7 @@ const getProfile = async () => {
             email: "example@gmail.com",
             firstname: "-",
             lastname: "-",
-            dob: "1900-01-01",
+            dob: "2000-01-01",
             address: "-",
             job: "-",
             city: "-",
