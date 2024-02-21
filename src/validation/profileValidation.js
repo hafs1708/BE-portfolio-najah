@@ -23,6 +23,7 @@ const isCreateProfile = Joi.object({
     address: isText.required(),
     city: isString100.required(),
     country: isString100.required(),
+    phone: isString100.required(),
     job: isString100.required(),
     ...nonRequaired
 });
@@ -35,6 +36,7 @@ const isUpdateProfile = Joi.object({
     address: isText,
     city: isString100,
     country: isString100,
+    phone: isString100,
     job: isString100,
     ...nonRequaired
 });

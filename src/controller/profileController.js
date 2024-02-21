@@ -44,10 +44,7 @@ const put = async (req, res, next) => {
             // Validasi
             data = Validate(isCreateProfile, data);
 
-            dataProfile = await Prisma.profile.update({
-                where: {
-                    email: profile.email
-                },
+            dataProfile = await Prisma.profile.create({
                 data
             });
 
@@ -70,8 +67,9 @@ const put = async (req, res, next) => {
             }
         }
 
-        res.status(200).json({ data: dataProfile });
+        res.status(200).json(dataProfile);
     } catch (error) {
+        console.log(error);
         // jika error && ada file, maka file di hapus
         console.log("handle error")
         if (req.file) {
