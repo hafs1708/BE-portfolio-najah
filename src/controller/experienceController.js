@@ -52,7 +52,7 @@ const get = async (req, res, next) => {
 
         id = Validate(isID, id);
 
-        const data = await Prisma.experience.findFirst({
+        const data = await Prisma.experience.findUnique({
             where: { id }
         });
 
@@ -61,10 +61,7 @@ const get = async (req, res, next) => {
 
         formatData(data);
 
-        res.status(200).json({
-            message: "Berhasil",
-            data
-        });
+        res.status(200).json(data);
     } catch (error) {
         next(error)
     }
@@ -84,10 +81,7 @@ const post = async (req, res, next) => {
 
         formatData(newExperience);
 
-        res.status(200).json({
-            message: "Data berhasil disimpan",
-            data: newExperience
-        });
+        res.status(200).json(newExperience);
     } catch (error) {
         next(error)
     }
@@ -117,10 +111,7 @@ const put = async (req, res, next) => {
 
         formatData(currentExperience);
 
-        res.status(200).json({
-            message: "Data berhasil disimpan seluruhnya",
-            data
-        });
+        res.status(200).json(data);
     } catch (error) {
         next(error)
     }
