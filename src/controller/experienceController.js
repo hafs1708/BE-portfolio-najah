@@ -27,10 +27,7 @@ const getAll = async (req, res, next) => {
         // FIND MANY -> ambil semua blog
         const data = await getExperience();
 
-        res.status(200).json({
-            message: "Berhasil mendapatkan semua data experience",
-            data
-        });
+        res.status(200).json(data);
     } catch (error) {
         next(error);
     }
