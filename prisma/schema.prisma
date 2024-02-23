@@ -63,7 +63,7 @@ model Project {
   title       String         @db.VarChar(255)
   description String         @db.Text
   startDate   DateTime       @db.Date
-  endtDate    DateTime?      @db.Date
+  endDate     DateTime?      @db.Date
   status      ProjectStatus  @default(ON_PROGRESS)
   url         String?        @db.VarChar(100)
   github      String?        @db.VarChar(100)
@@ -87,7 +87,7 @@ model Education {
   id              Int      @id @default(autoincrement())
   institutionName String   @db.VarChar(100)
   startYear       Int      @db.Int
-  endYear         Int      @db.Int
+  endYear         Int?     @db.Int
   major           String?  @db.VarChar(100)
   degree          String?  @db.VarChar(100)
   createdAt       DateTime @default(now())
