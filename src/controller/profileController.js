@@ -69,9 +69,9 @@ const put = async (req, res, next) => {
 
         res.status(200).json(dataProfile);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         // jika error && ada file, maka file di hapus
-        console.log("handle error")
+        // console.log("handle error")
         if (req.file) {
             // handle buang file
             fileService.removeFile(req.file.path)

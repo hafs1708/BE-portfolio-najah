@@ -124,7 +124,7 @@ const put = async (req, res, next) => {
         // remove category
         // id category sebelumnya
         const previous_skill_id = currentSkill.skillCategoryId;
-        console.log(previous_skill_id)
+        // console.log(previous_skill_id)
         await skillService.remove_category(previous_skill_id);
 
         res.status(200).json(data);
@@ -157,7 +157,7 @@ const remove = async (req, res) => {
         // remove category
         // id category sebelumnya
         const previous_skill_id = currentSkill.skillCategoryId;
-        console.log(previous_skill_id)
+        // console.log(previous_skill_id)
         await skillService.remove_category(previous_skill_id);
 
         res.status(200).json({

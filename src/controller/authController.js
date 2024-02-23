@@ -60,7 +60,7 @@ const logout = async (req, res, next) => {
 
         // BUAT TOKEN UMUR 1 DETIK = 1s
         authService.createToken(email, res, '1s');
-        console.log(user);
+        // console.log(user);
 
         // RESER COOKIE
         res.clearCookie('token');

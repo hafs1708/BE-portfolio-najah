@@ -90,7 +90,7 @@ app.use(notFound);
 app.use(errorMiddleware);
 
 const port = process.env.PORT || 5000;
-console.log(port);
+// console.log(port);
 app.listen(port, () => {
     console.info("App is running in http://localhost:" + port)
 });

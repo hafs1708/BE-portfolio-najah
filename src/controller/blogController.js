@@ -97,7 +97,7 @@ const get = async (req, res, next) => {
 
 // PATH: METHOD POST UNTUK MENYIMPAN DATA BLOG
 const post = async (req, res, next) => {
-    console.log("masuk method post")
+    // console.log("masuk method post")
     try {
         // untuk mengumpulkan photo path
         const photos = fileService.getUploadPhotos(req);
@@ -124,7 +124,7 @@ const post = async (req, res, next) => {
 
         res.status(200).json(data);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         if (req.files) {
             // buang file jika error
             for (const file of req.files) {
