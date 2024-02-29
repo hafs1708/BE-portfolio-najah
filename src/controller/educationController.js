@@ -90,12 +90,12 @@ const post = async (req, res, next) => {
 // PATH: METHOD PUT UNTUK MENYIMPAN SELURUH DATA EDUCATION
 const put = async (req, res, next) => {
     try {
-        let education = req.body;
+        let data = req.body;
         let id = req.params.id;
 
         id = Validate(isID, id);
 
-        education = Validate(isEducation, education);
+        data = Validate(isEducation, data);
 
         const currentEducation = await Prisma.education.findUnique({
             where: { id },
@@ -104,13 +104,13 @@ const put = async (req, res, next) => {
 
         if (!currentEducation) throw new ResponseError(404, `Blog dengan ${id} tidak ditemukan`);
 
-        const data = await Prisma.education.update({
+        const education = await Prisma.education.update({
             where: { id }, data
         });
 
-        formatData(data);
+        formatData(education);
 
-        res.status(200).json(data);
+        res.status(200).json(education);
     } catch (error) {
         next(error)
     }
