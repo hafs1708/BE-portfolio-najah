@@ -6,13 +6,22 @@ import { isID } from "../validation/mainValidation.js";
 import { isSkill } from "../validation/skillValidation.js";
 
 //  PATH: METHOD GET UNTUK MENGAMBIL DATA SKILL
-const getAll = async (req, res) => {
-    const data = await Prisma.skill.findMany({
-        include: {
-            category: true
-        }
-    })
-    res.status(200).json(data);
+const getAll = async (req, res, next) => {
+    try {
+        const data = await Prisma.skill.findMany({
+            include: {
+                category: true,
+                _count: {
+                    select: {
+                        projects: true
+                    }
+                },
+            },
+        });
+        res.status(200).json(data);
+    } catch (error) {
+        next(error);
+    }
 };
 
 // GET SKILL BY CATEGORY
