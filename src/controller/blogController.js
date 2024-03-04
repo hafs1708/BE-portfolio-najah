@@ -21,8 +21,14 @@ const getAll = async (req, res, next) => {
         // LIMIT
         const limit = parseInt(req.query.limit) || 10;
 
+        // SEARCH
+        const search = req.query.search || '';
+
+        console.log('search')
+        console.log(search)
+
         // get total data
-        const { data, total } = await getByPage(page, limit);
+        const { data, total } = await getByPage(page, limit, search);
         const maxPage = Math.ceil(total / limit);
 
         // loop array
@@ -33,18 +39,24 @@ const getAll = async (req, res, next) => {
             page,
             total,
             limit,
-            maxPage
+            maxPage,
+            search
         });
     } catch (error) {
         next(error);
     }
 };
 
-const getByPage = async (page = 1, limit = 10) => {
+const getByPage = async (page = 1, limit = 10, search = '') => {
     // SKIP
     const skip = (page - 1) * limit;
 
     const data = await Prisma.blog.findMany({
+        where: {
+            title: {
+                contains: search
+            }
+        },
         take: limit,
         skip: skip,
         include: {
@@ -60,7 +72,13 @@ const getByPage = async (page = 1, limit = 10) => {
     }
 
     // get total data
-    const total = await Prisma.blog.count();
+    const total = await Prisma.blog.count({
+        where: {
+            title: {
+                contains: search
+            }
+        }
+    });
 
     return {
         data,
