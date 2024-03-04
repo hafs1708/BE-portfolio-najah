@@ -55,6 +55,7 @@ model Blog {
   updatedAt DateTime @default(now()) @updatedAt
   photos    Photo[]
 
+  @@index([title])
   @@map("blog")
 }
 

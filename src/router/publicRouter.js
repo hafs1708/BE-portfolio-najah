@@ -33,6 +33,9 @@ routerPublic.get('/skills', skillController.getAll);
 routerPublic.get('/skill/:id', skillController.get);
 routerPublic.get('/skill_by_category', skillController.getSkillByCategory);
 
+// GET ALL SKILL CATEGORY
+routerPublic.get('/skill_categories', skillController.getAllCategory);
+
 // EXPERIENCE
 routerPublic.get('/experiences', experienceController.getAll);
 routerPublic.get('/experience/:id', experienceController.get);

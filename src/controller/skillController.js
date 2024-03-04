@@ -34,7 +34,20 @@ const getSkillByCategory = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+};
+
+// GET ALL CATEGORY
+const getAllCategory = async(req, res, next) => {
+    try {
+        const data = await Prisma.skillCategory.findMany({
+            orderBy: {title: 'asc'}
+        });
+
+        res.status(200).json(data);
+    } catch (error) {
+        next(error);
+    }
+};
 
 const handleSkillByCategory = async () => {
     return await Prisma.skillCategory.findMany({
@@ -128,7 +141,7 @@ const put = async (req, res, next) => {
         const data = await Prisma.skill.update({
             where: { id },
             data: update_data
-        });
+        });5
 
         // remove category
         // id category sebelumnya
@@ -179,6 +192,7 @@ const remove = async (req, res) => {
 
 export default {
     getAll,
+    getAllCategory,
     get,
     post,
     put,
