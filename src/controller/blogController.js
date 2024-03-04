@@ -24,9 +24,6 @@ const getAll = async (req, res, next) => {
         // SEARCH
         const search = req.query.search || '';
 
-        console.log('search')
-        console.log(search)
-
         // get total data
         const { data, total } = await getByPage(page, limit, search);
         const maxPage = Math.ceil(total / limit);
