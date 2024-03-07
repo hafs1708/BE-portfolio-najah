@@ -122,6 +122,9 @@ const post = async (req, res, next) => {
 
         let project = req.body;
 
+        // jadikan endDate null
+        if(!project.endDate) project.endDate = null;
+
         // START JOI VALIDATE
         project = Validate(isProject, project);
 
