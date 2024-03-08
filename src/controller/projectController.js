@@ -181,6 +181,9 @@ const put = async (req, res, next) => {
 
         // VALIDATE ID
         id = Validate(isID, id);
+        
+        // jadikan endDate null
+        if(!project.endDate) project.endDate = null;
 
         // START JOI VALIDATE
         project = Validate(isProject, project);
