@@ -11,6 +11,7 @@ export const routerPublic = express.Router();
 
 // USER
 routerPublic.post('/first_user', authController.createFirstUser);
+routerPublic.get('/is_user_exist', authController.isUserExist);
 
 // AUTH
 routerPublic.post('/login', authController.login);

@@ -165,7 +165,20 @@ const createFirstUser = async (req, res, next) => {
             // create user
             res.status(200).json(user);
         }
+    } catch (error) {
+        next(error)
+    }
+};
 
+const isUserExist = async(req, res, next) => {
+    try {
+        // check ke db
+        const user = await Prisma.user.findFirst();
+
+        // return true / false
+        res.status(403).json({
+            isExist: user ? true : false
+        });
     } catch (error) {
         next(error)
     }
@@ -176,5 +189,6 @@ export default {
     logout,
     get,
     put,
-    createFirstUser
+    createFirstUser,
+    isUserExist
 }
