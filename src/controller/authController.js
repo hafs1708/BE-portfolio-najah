@@ -5,7 +5,7 @@ dotenv.config();
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
 import { ResponseError } from "../error/responseError.js";
-import { loginValidation, updateUserValidation } from "../validation/authValidation.js";
+import { createUserValidation, loginValidation, updateUserValidation } from "../validation/authValidation.js";
 import bycrpt from 'bcrypt';
 import authService from "../service/authService.js";
 import Joi from 'joi';
@@ -132,9 +132,49 @@ const put = async (req, res, next) => {
     }
 }
 
+const createFirstUser = async (req, res, next) => {
+    try {
+        // cek apakah user sudah ada di database
+        const checkUser = await Prisma.user.findFirst();
+
+        if (checkUser != null) {
+            res.status(403).json({
+                message: 'User already exist'
+            });
+
+            next();
+        } else {
+            // validasi
+            const data = Validate(createUserValidation, req.body);
+
+            // buang confirm password
+            delete data.confirm_password;
+
+            // enkripsi password
+            data.password = await bycrpt.hash(data.password, 10);
+
+            // create user
+            const user = await Prisma.user.create({
+                data, 
+                select: {
+                    name: true,
+                    email: true
+                }
+            });
+
+            // create user
+            res.status(200).json(user);
+        }
+
+    } catch (error) {
+        next(error)
+    }
+}
+
 export default {
     login,
     logout,
     get,
-    put
+    put,
+    createFirstUser
 }

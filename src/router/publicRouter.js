@@ -9,6 +9,9 @@ import experienceController from '../controller/experienceController.js';
 
 export const routerPublic = express.Router();
 
+// USER
+routerPublic.post('/first_user', authController.createFirstUser);
+
 // AUTH
 routerPublic.post('/login', authController.login);
 
