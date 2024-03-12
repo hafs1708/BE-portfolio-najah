@@ -176,7 +176,7 @@ const isUserExist = async(req, res, next) => {
         const user = await Prisma.user.findFirst();
 
         // return true / false
-        res.status(403).json({
+        res.status(200).json({
             isExist: user ? true : false
         });
     } catch (error) {
